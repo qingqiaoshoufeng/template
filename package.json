@@ -1,6 +1,9 @@
 {
-  "name": "castle-core",
+  "name": "castle-template",
   "version": "0.0.1",
+  "bin": {
+    "castle": "bin/castle.js"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -25,6 +28,7 @@
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/test-utils": "^2.0.2",
     "autoprefixer": "^10.4.8",
+    "commander": "^9.4.0",
     "cypress": "^10.4.0",
     "eslint": "^8.21.0",
     "eslint-plugin-cypress": "^2.12.1",
