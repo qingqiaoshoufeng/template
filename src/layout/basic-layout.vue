@@ -8,10 +8,10 @@
     :loading="loading"
   >
     <template #menuHeaderRender>
-      <a>
+      <RouterLink to="/">
         <img src="@/assets/images/logo.png" />
-        <h1>Castle</h1>
-      </a>
+        <h1>{{ appTitle }}</h1>
+      </RouterLink>
     </template>
 
     <!-- custom breadcrumb itemRender  -->
@@ -28,9 +28,11 @@
 
     <!-- content begin -->
     <router-view v-slot="{ Component }">
-      <!-- <WaterMark :content="watermarkContent"> -->
-      <component :is="Component" />
-      <!-- </WaterMark> -->
+      <PageContainer fixed-header :title="$route.meta.title" :sub-title="$route.meta.subTitle">
+        <WaterMark :content="watermarkContent">
+          <component :is="Component" />
+        </WaterMark>
+      </PageContainer>
     </router-view>
   </pro-layout>
 </template>
@@ -38,10 +40,15 @@
 <script setup>
 import { reactive, computed, watchEffect, ref } from "vue";
 import { useRouter } from "vue-router";
-import { getMenuData, clearMenuItem } from "@ant-design-vue/pro-layout";
+import { getMenuData, clearMenuItem, WaterMark } from "@ant-design-vue/pro-layout";
+import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
+import { useAppStore } from "#/store";
+
+const appStore = useAppStore();
+const appTitle = computed(() => appStore.title);
+const watermarkContent = computed(() => appStore.watermarkContent);
 
 const router = useRouter();
-
 const { menuData } = getMenuData(clearMenuItem(router.getRoutes()));
 
 const loading = ref(false);
@@ -59,7 +66,7 @@ const state = reactive({
 
 // 更多配置参考 https://www.npmjs.com/package/@ant-design-vue/pro-layout
 const layoutConf = reactive({
-  navTheme: "realDark",
+  // navTheme: "realDark",
   headerTheme: "dark",
   layout: "mix",
   splitMenus: false,

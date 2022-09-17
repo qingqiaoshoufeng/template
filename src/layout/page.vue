@@ -12,7 +12,7 @@
 
 <script setup>
 // import { computed } from "vue";
-// import { useTabBarStore } from "@/store";
+// import { useTabBarStore } from "#/store";
 // const tabBarStore = useTabBarStore();
 // const cacheList = computed(() => tabBarStore.getCacheList);
 </script>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { message, Modal } from "ant-design-vue";
-import { useUserStore } from "@/store";
-import { getToken } from "@/utils/auth";
+import { useUserStore } from "#/store";
+import { getToken } from "#/utils/auth";
 
 import "ant-design-vue/es/message/style/css";
 

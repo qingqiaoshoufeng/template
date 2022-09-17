@@ -25,6 +25,8 @@
 
 <script>
 import { Modal } from "ant-design-vue";
+import { mapActions } from "pinia";
+import { useUserStore } from "#/store";
 export default {
   name: "AvatarDropdown",
   props: {
@@ -38,6 +40,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(useUserStore, ["logout"]),
     handleToCenter() {
       this.$router.push({ path: "/account/center" });
     },
@@ -49,14 +52,13 @@ export default {
         title: "提示",
         content: "你确认登出吗？",
         onOk: () => {
-          // return new Promise((resolve, reject) => {
-          //   setTimeout(Math.random() > 0.5 ? resolve : reject, 1500)
-          // }).catch(() => console.log('Oops errors!'))
-          // return this.$store.dispatch("Logout").then(() => {
-          //   this.$router.push({ name: "login" });
-          // });
+          this.logout().then(() => {
+            this.$router.push({ name: "login" });
+          });
         },
         onCancel() {},
+        okText: "确认登出",
+        cancelText: "取消",
       });
     },
   },

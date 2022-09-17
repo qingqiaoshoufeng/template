@@ -1,9 +1,10 @@
-import { useUserStore } from "@/store";
-import { isLogin } from "@/utils/auth";
+import { useUserStore } from "#/store";
+import { isLogin } from "#/utils/auth";
 
 export default function setupUserLoginInfoGuard(router) {
   router.beforeEach(async (to, from, next) => {
     const userStore = useUserStore();
+
     if (isLogin()) {
       if (userStore.role) {
         next();

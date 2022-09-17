@@ -47,13 +47,13 @@
 
 <script setup>
 import PageLayout from "./page.vue";
-import { useAppStore } from "@/store";
+import { useAppStore } from "#/store";
 import { computed, ref, provide } from "vue";
 
-// import NavBar from "@/components/layout/navbar/index.vue";
-import Menu from "@/components/layout/menu/index-old.vue";
-// import Footer from "@/components/layout/footer/index.vue";
-// import TabBar from "@/components/layout/tab-bar/index.vue";
+// import NavBar from "#/components/layout/navbar/index.vue";
+import Menu from "#/components/layout/menu/index-old.vue";
+// import Footer from "#/components/layout/footer/index.vue";
+// import TabBar from "#/components/layout/tab-bar/index.vue";
 
 const navbarHeight = `60px`;
 const appStore = useAppStore();

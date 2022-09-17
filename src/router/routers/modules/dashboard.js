@@ -1,4 +1,4 @@
-const BASIC_LAYOUT = () => import("@/layout/basic-layout.vue");
+const BASIC_LAYOUT = () => import("#/layout/basic-layout.vue");
 
 export default [
   {
@@ -16,7 +16,7 @@ export default [
       {
         path: "workplace",
         name: "workplace",
-        component: () => import("@/views/dashboard/index.vue"),
+        component: () => import("#/views/dashboard/index.vue"),
         hidden: true,
         meta: {
           title: "仪表盘",
@@ -26,7 +26,7 @@ export default [
       {
         path: "workplace1",
         name: "workplace1",
-        component: () => import("@/views/dashboard/index.vue"),
+        component: () => import("#/views/dashboard/index.vue"),
         hidden: true,
         meta: {
           title: "仪表盘1",

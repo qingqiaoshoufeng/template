@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 
-import { setToken, clearToken } from "@/utils/auth";
-import { login, logout, getUserInfo } from "@/api/user";
+import { setToken, clearToken } from "#/utils/auth";
+import { login, logout, getUserInfo } from "#/api/user";
 
 const useUserStore = defineStore("user", {
   state: () => ({
@@ -24,13 +24,18 @@ const useUserStore = defineStore("user", {
       this.$reset();
     },
     async login(loginForm) {
-      try {
-        const res = await login(loginForm);
-        setToken(res.data.token);
-      } catch (err) {
-        clearToken();
-        throw err;
-      }
+      return new Promise((resolve, reject) => {
+        login(loginForm)
+          .then((res) => {
+            setToken(res.data.token);
+            resolve();
+          })
+          .catch((err) => {
+            clearToken();
+            reject();
+            throw err;
+          });
+      });
     },
     async logout() {
       try {
