@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-// import Antd from "ant-design-vue";
+import Antd from "ant-design-vue";
 import ProLayout, { PageContainer } from "@ant-design-vue/pro-layout";
 import * as Icons from "@ant-design/icons-vue";
 
@@ -16,7 +16,7 @@ const app = createApp(App);
 
 app.use(createPinia());
 app.use(router);
-// app.use(Antd);
+app.use(Antd);
 app.use(ProLayout);
 app.use(PageContainer);
 
