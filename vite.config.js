@@ -14,6 +14,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["ant-design-vue", "axios"],
+    include: ["ant-design-vue", "@ant-design-vue/pro-layout", "@ant-design/icons-vue", "axios", "vue", "pinia"],
   },
 });
