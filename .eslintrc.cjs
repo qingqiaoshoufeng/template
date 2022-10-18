@@ -14,6 +14,7 @@ module.exports = {
   },
   rules: {
     "vue/multi-word-component-names": "off",
+    "vue/no-v-model-argument": "off",
     "import/no-extraneous-dependencies": 0,
     "import/extensions": 0,
     "import/no-unresolved": 0,

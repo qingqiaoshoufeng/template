@@ -1,4 +1,6 @@
-const TOKEN_KEY = "token";
+import userSettings from "@/config/settings.mjs";
+
+const TOKEN_KEY = userSettings.tokenKeyName || "token";
 
 const isLogin = () => {
   return !!localStorage.getItem(TOKEN_KEY);

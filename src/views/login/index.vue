@@ -71,7 +71,7 @@ const formState = reactive({
 const onFinish = (values) => {
   const userStore = useUserStore();
   console.log("Success:", values);
-  userStore.login();
+  userStore.login(values);
   router.push({
     path: "/HOME_PAGE",
   });
