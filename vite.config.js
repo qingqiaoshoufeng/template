@@ -8,13 +8,20 @@ import { merge } from "lodash";
 
 // https://vitejs.dev/config/
 export default async ({ command, mode }) => {
-  const settings = await import(pathToFileURL(`${path.resolve(process.cwd(), "./src/config/settings.mjs")}`));
+  const settings = await import(pathToFileURL(`${path.resolve(process.cwd(), "./src/config/project-settings.mjs")}`));
   const {
     default: { server, vite },
   } = settings;
 
   const defaultConfig = defineConfig({
-    plugins: [vue(), vueJsx(), Pages()],
+    plugins: [
+      vue(),
+      vueJsx(),
+      Pages({
+        routeStyle: "next",
+        exclude: ["**/*/_*.@(vue|js|jsx)"],
+      }),
+    ],
     server: server && server({ command, mode }),
     resolve: {
       alias: {
@@ -24,7 +31,16 @@ export default async ({ command, mode }) => {
       },
     },
     optimizeDeps: {
-      include: ["ant-design-vue", "@ant-design-vue/pro-layout", "@ant-design/icons-vue", "axios", "vue", "pinia"],
+      include: [
+        "ant-design-vue",
+        "@ant-design-vue/pro-layout",
+        "@ant-design/icons-vue",
+        "axios",
+        "vue",
+        "pinia",
+        "nprogress",
+        "jsencrypt",
+      ],
     },
   });
 

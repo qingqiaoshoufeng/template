@@ -6,7 +6,7 @@
       </div>
     </template>
     <template #extra>
-      <RouterLink to="/HOME_PAGE">
+      <RouterLink to="/">
         <a-button type="primary">返回首页</a-button>
       </RouterLink>
     </template>

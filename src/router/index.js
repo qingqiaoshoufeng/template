@@ -3,9 +3,13 @@ import { NOT_FOUND_ROUTE, FORBIDDEN_ROUTE } from "./routers/modules/base";
 import createRouteGuard from "./guard";
 import appRoutes from "~pages";
 
-import userSettings from "@/config/settings.mjs";
+import userSettings from "@/config/settings.js";
+import NProgress from "nprogress"; // progress bar
+import "nprogress/nprogress.css";
 
 const BASIC_LAYOUT = () => import("#/layout/basic-layout.vue");
+
+NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,10 +19,11 @@ const router = createRouter({
       name: "index",
       redirect: userSettings.homePath,
       component: BASIC_LAYOUT,
-      children: appRoutes,
       meta: {
-        title: "首頁",
+        title: "首页",
+        requiresAuth: false,
       },
+      children: appRoutes,
     },
     {
       path: "/login",
@@ -27,11 +32,6 @@ const router = createRouter({
       meta: {
         requiresAuth: false,
       },
-    },
-    {
-      path: "/HOME_PAGE",
-      name: "HOME_PAGE",
-      redirect: userSettings.homePath,
     },
     NOT_FOUND_ROUTE,
     FORBIDDEN_ROUTE,

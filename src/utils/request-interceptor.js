@@ -1,8 +1,9 @@
 import axios from "axios";
-import { message, Modal } from "ant-design-vue";
+import { notification } from "ant-design-vue";
 import { useUserStore } from "#/store";
 import { getToken } from "#/utils/auth";
-import userSettings from "@/config/settings.mjs";
+import userSettings from "@/config/settings.js";
+import { getCodeMessages } from "#/utils/http-code-messages";
 
 import "ant-design-vue/es/message/style/css";
 
@@ -25,7 +26,7 @@ if (requestSetting) {
         if (!config.headers) {
           config.headers = {};
         }
-        config.headers.Authorization = `Bearer ${token}`;
+        config.headers.Authorization = token;
       }
       return config;
     },
@@ -43,36 +44,64 @@ if (responseSetting) {
 } else {
   axios.interceptors.response.use(
     (response) => {
-      const res = response.data;
-      // if the custom code is not 20000, it is judged as an error.
-      if (res.code !== 20000) {
-        message.error({
-          content: res.msg || "Error",
-          duration: 5 * 1000,
-        });
-        // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-        if ([50008, 50012, 50014].includes(res.code) && response.config.url !== "/api/user/info") {
-          Modal.error({
-            title: "Confirm logout",
-            content: "You have been logged out, you can cancel to stay on this page, or log in again",
-            okText: "Re-Login",
-            async onOk() {
-              const userStore = useUserStore();
+      const { data } = response;
+      const { code, data: resData } = data;
 
-              await userStore.logout();
-              window.location.reload();
-            },
+      if (code !== 200) {
+        if (code === 403) {
+          notification.error({
+            message: "无权限",
+            description: data.message,
+          });
+        } else if (code === 406) {
+          notification.info({
+            message: "非法参数",
+            description: data.message,
+          });
+        } else if (code === 500) {
+          notification.error({
+            message: "系统内部错误",
+            description: data.message,
+          });
+        } else {
+          notification.error({
+            message: data.msg || "未知错误",
           });
         }
-        return Promise.reject(new Error(res.msg || "Error"));
+
+        return Promise.reject(new Error(data.msg || "Error"));
       }
-      return res;
+
+      return resData;
     },
     (error) => {
-      message.error({
-        content: error.msg || "Request Error",
-        duration: 5 * 1000,
-      });
+      if (error.response) {
+        const { status, statusText, data } = error.response;
+        const { message } = data;
+        const token = getToken();
+
+        if (status === 401) {
+          notification.error({
+            message: "登录已过期",
+            description: "授权验证失败",
+          });
+          if (token) {
+            useUserStore()
+              .logout()
+              .then(() => {
+                setTimeout(() => {
+                  window.location.reload();
+                }, 1500);
+              });
+          }
+        } else {
+          notification.error({
+            message: `${status} ${statusText}` || "请求失败",
+            description: message || getCodeMessages(status) || `未知错误 ${statusText}`,
+          });
+        }
+      }
+
       return Promise.reject(error);
     },
   );

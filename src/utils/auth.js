@@ -1,4 +1,4 @@
-import userSettings from "@/config/settings.mjs";
+import userSettings from "@/config/settings.js";
 
 const TOKEN_KEY = userSettings.tokenKeyName || "token";
 

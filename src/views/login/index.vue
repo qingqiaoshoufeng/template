@@ -12,7 +12,7 @@
     </header>
     <div class="login-wrap">
       <a-row :gutter="[16, 16]">
-        <a-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" :xxl="6" :XXXl="4">
+        <a-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" :xxl="6" :xxxl="4">
           <h1 class="header-title">登录到<br />{{ appTitle }}</h1>
           <br />
           <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish">
@@ -25,7 +25,7 @@
             </a-form-item>
 
             <a-form-item name="password" :rules="[{ required: true, message: '请输入密码' }]">
-              <a-input-password placeholder="密码" size="large" v-model:value="formState.password">
+              <a-input-password placeholder="密码" size="large" autoComplete="on" v-model:value="formState.password">
                 <template #prefix>
                   <LockOutlined class="site-form-item-icon" />
                 </template>
@@ -40,7 +40,16 @@
             </a-form-item>
 
             <a-form-item>
-              <a-button size="large" block type="primary" html-type="submit" class="login-form-button"> 登录 </a-button>
+              <a-button
+                size="large"
+                block
+                type="primary"
+                html-type="submit"
+                class="login-form-button"
+                :loading="loading"
+              >
+                登录
+              </a-button>
             </a-form-item>
           </a-form>
         </a-col>
@@ -52,9 +61,12 @@
 </template>
 
 <script setup>
-import { computed, reactive } from "vue";
+import { computed, reactive, inject, ref } from "vue";
 import { useRouter } from "vue-router";
+// @ts-ignore
 import { useAppStore, useUserStore } from "#/store";
+
+const encrypt = inject("encrypt");
 
 const router = useRouter();
 
@@ -63,18 +75,32 @@ const appTitle = computed(() => appStore.title);
 const copyright = computed(() => appStore.copyright);
 
 const formState = reactive({
-  username: "admin",
-  password: "admin",
-  remember: true,
+  username: "",
+  password: "",
+  remember: false,
 });
 
-const onFinish = (values) => {
+let loading = ref(false);
+
+const onFinish = (formData) => {
+  loading.value = true;
   const userStore = useUserStore();
-  console.log("Success:", values);
-  userStore.login(values);
-  router.push({
-    path: "/HOME_PAGE",
-  });
+  const { redirect, ...othersQuery } = router.currentRoute.value.query;
+
+  userStore
+    .login({ ...formData, encryptPassword: encrypt(formData.password) })
+    .then(() => {
+      router.push({
+        // @ts-ignore
+        name: redirect || "index",
+        query: {
+          ...othersQuery,
+        },
+      });
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 };
 </script>
 

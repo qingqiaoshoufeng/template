@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 
 import { setToken, clearToken } from "#/utils/auth";
-import { login, logout, getUserInfo } from "#/api/user";
+
+import userSettings from "@/config/settings.js";
 
 const useUserStore = defineStore("user", {
   state: () => ({
-    name: undefined,
-    // TODO: 需要去掉默认角色，现在是为了方便调试
-    role: "admin",
+    name: "",
+    role: "",
+    roleName: "",
   }),
 
   getters: {
@@ -24,10 +25,13 @@ const useUserStore = defineStore("user", {
       this.$reset();
     },
     async login(loginForm) {
+      if (!userSettings?.userApiImplement?.login) throw "[Castle] settings.js 未配置 login 方法";
       return new Promise((resolve, reject) => {
-        login(loginForm)
-          .then((res) => {
-            setToken(res.data.token);
+        userSettings.userApiImplement
+          .login(loginForm)
+          .then(async (token) => {
+            setToken(token);
+            await this.getUserInfo();
             resolve();
           })
           .catch((err) => {
@@ -38,18 +42,37 @@ const useUserStore = defineStore("user", {
       });
     },
     async logout() {
-      try {
-        await logout();
-      } finally {
-        // this.logoutCallBack();
-        this.resetInfo();
-        clearToken();
-      }
+      if (!userSettings?.userApiImplement?.logout) throw "[Castle] settings.js 未配置 logout 方法";
+      return new Promise((resolve, reject) => {
+        userSettings.userApiImplement
+          .logout()
+          .then(() => {
+            resolve();
+          })
+          .catch((err) => {
+            reject();
+            throw err;
+          })
+          .finally(() => {
+            this.resetInfo();
+            clearToken();
+          });
+      });
     },
-    async info() {
-      const res = await getUserInfo();
-
-      this.setInfo(res.data);
+    getUserInfo() {
+      if (!userSettings?.userApiImplement?.getUserInfo) throw "[Castle] settings.js 未配置 getUserInfo 方法";
+      return new Promise((resolve, reject) => {
+        userSettings.userApiImplement
+          .getUserInfo()
+          .then((res) => {
+            this.setInfo(res);
+            resolve();
+          })
+          .catch((err) => {
+            reject();
+            throw err;
+          });
+      });
     },
   },
 });
