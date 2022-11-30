@@ -11,7 +11,9 @@ const configPath = path.resolve(process.cwd(), "./node_modules/@castle/castle-te
 // program.version(require("../package.json").version).usage("<command> [options] ");
 
 program.command("dev").action((...args) => {
-  require("./utils/invoke-vite")(["serve", "--config", configPath]);
+  // console.log(args);
+  // require("./utils/invoke-vite")(["serve", "--config", configPath]);
+  require("./utils/invoke-vite")(["serve", "--config", configPath, "--debug"]);
 });
 
 program.command("build").action((...args) => {

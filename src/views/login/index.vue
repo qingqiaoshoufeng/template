@@ -56,7 +56,7 @@
       </a-row>
     </div>
 
-    <footer class="copyright">{{ copyright }}</footer>
+    <footer class="copyright">{{ typeof copyright === "function" && copyright() }}</footer>
   </div>
 </template>
 

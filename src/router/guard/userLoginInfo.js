@@ -28,7 +28,7 @@ export default function setupUserLoginInfoGuard(router) {
       }
     } else {
       const hasPermissions = Boolean(to?.meta?.permissions);
-      const requiresAuth = Boolean(to?.meta?.requiresAuth || true);
+      const requiresAuth = Boolean(to?.meta?.requiresAuth ?? true);
       // 没有登陆的情况下，如果当前页面在登陆页面或者当前页面不需要权限
       if (to.name === "login" || !requiresAuth) {
         if (!hasPermissions && !requiresAuth) {

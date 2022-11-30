@@ -1,6 +1,6 @@
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import Pages from "vite-plugin-pages";
@@ -13,6 +13,10 @@ export default async ({ command, mode }) => {
     default: { server, vite },
   } = settings;
 
+  // 根据当前工作目录中的 `mode` 加载 .env 文件
+  // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
+  const env = loadEnv(mode, process.cwd(), "");
+
   const defaultConfig = defineConfig({
     plugins: [
       vue(),
@@ -22,7 +26,7 @@ export default async ({ command, mode }) => {
         exclude: ["**/*/_*.@(vue|js|jsx)"],
       }),
     ],
-    server: server && server({ command, mode }),
+    server: server && server({ command, mode, env }),
     resolve: {
       alias: {
         "~": path.resolve(process.cwd(), "./"),
@@ -33,6 +37,7 @@ export default async ({ command, mode }) => {
     optimizeDeps: {
       include: [
         "ant-design-vue",
+        "ant-design-vue/es/locale/zh_CN",
         "@ant-design-vue/pro-layout",
         "@ant-design/icons-vue",
         "axios",
@@ -44,7 +49,7 @@ export default async ({ command, mode }) => {
     },
   });
 
-  const userConfig = vite && vite({ command, mode });
+  const userConfig = vite && vite({ command, mode, env });
 
   return merge(defaultConfig, userConfig);
 };

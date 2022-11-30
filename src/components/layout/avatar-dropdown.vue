@@ -11,9 +11,14 @@
     </span>
     <template v-slot:overlay>
       <a-menu class="drop-down menu" :selected-keys="[]">
-        <a-menu-item v-if="menu" key="center" @click="handleToCenter"> 用户名 </a-menu-item>
-        <a-menu-item v-if="menu" key="settings" @click="handleToSettings"> 设置 </a-menu-item>
-        <a-menu-divider v-if="menu" />
+        <template v-if="Array.isArray(userNavigation) && userNavigation.length > 0">
+          <a-menu-item v-for="item in userNavigation" :key="item.label" @click="item.handleFn">
+            {{ item.label }}
+          </a-menu-item>
+
+          <a-menu-divider />
+        </template>
+
         <a-menu-item key="logout" @click="handleLogout"> 退出 </a-menu-item>
       </a-menu>
     </template>
@@ -27,6 +32,7 @@
 import { Modal } from "ant-design-vue";
 import { mapActions } from "pinia";
 import { useUserStore } from "#/store";
+import userSettings from "@/config/settings.js";
 export default {
   name: "AvatarDropdown",
   props: {
@@ -39,14 +45,13 @@ export default {
       default: true,
     },
   },
+  computed: {
+    userNavigation() {
+      return userSettings?.userNavigation;
+    },
+  },
   methods: {
     ...mapActions(useUserStore, ["logout"]),
-    handleToCenter() {
-      this.$router.push({ path: "/account/center" });
-    },
-    handleToSettings() {
-      this.$router.push({ path: "/account/settings" });
-    },
     handleLogout() {
       Modal.confirm({
         title: "提示",

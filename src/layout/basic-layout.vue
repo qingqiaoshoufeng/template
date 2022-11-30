@@ -1,5 +1,5 @@
 <template>
-  <a-config-provider v-bind="userSettings?.themeConfigProvider">
+  <a-config-provider v-bind="{ locale: zhCN, ...(userSettings?.themeConfigProvider || {}) }">
     <pro-layout
       v-bind="layoutConf"
       v-model:openKeys="state.openKeys"
@@ -29,7 +29,7 @@
 
       <!-- content begin -->
       <router-view v-slot="{ Component }">
-        <PageContainer fixed-header :title="$route.meta.title" :sub-title="$route.meta.subTitle">
+        <PageContainer :title="$route.meta.title" :sub-title="$route.meta.subTitle">
           <WaterMark :content="watermarkContent">
             <component :is="Component" />
           </WaterMark>
@@ -49,6 +49,7 @@ import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
 // @ts-ignore
 import userSettings from "@/config/settings.js";
+import zhCN from "ant-design-vue/es/locale/zh_CN";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
