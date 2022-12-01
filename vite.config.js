@@ -4,6 +4,7 @@ import { defineConfig, loadEnv } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import Pages from "vite-plugin-pages";
+import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import { merge } from "lodash";
 
 // https://vitejs.dev/config/
@@ -25,6 +26,7 @@ export default async ({ command, mode }) => {
         routeStyle: "next",
         exclude: ["**/*/_*.@(vue|js|jsx)"],
       }),
+      vueSetupExtend(),
     ],
     server: server && server({ command, mode, env }),
     resolve: {
@@ -40,6 +42,7 @@ export default async ({ command, mode }) => {
         "ant-design-vue/es/locale/zh_CN",
         "@ant-design-vue/pro-layout",
         "@ant-design/icons-vue",
+        "@ant-design/icons-svg",
         "axios",
         "vue",
         "pinia",

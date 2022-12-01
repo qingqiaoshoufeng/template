@@ -27,14 +27,9 @@
         <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
       </template>
 
-      <!-- content begin -->
-      <router-view v-slot="{ Component }">
-        <PageContainer :title="$route.meta.title" :sub-title="$route.meta.subTitle">
-          <WaterMark :content="watermarkContent">
-            <component :is="Component" />
-          </WaterMark>
-        </PageContainer>
-      </router-view>
+      <PageContainer :title="$route.meta.title" :sub-title="$route.meta.subTitle">
+        <PageLayout />
+      </PageContainer>
     </pro-layout>
   </a-config-provider>
 </template>
@@ -42,7 +37,8 @@
 <script setup>
 import { reactive, computed, watchEffect, ref, inject } from "vue";
 import { useRouter } from "vue-router";
-import { getMenuData, clearMenuItem, WaterMark } from "@ant-design-vue/pro-layout";
+import PageLayout from "./page-layout.vue";
+import { getMenuData, clearMenuItem } from "@ant-design-vue/pro-layout";
 // @ts-ignore
 import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 // @ts-ignore
@@ -54,7 +50,6 @@ import zhCN from "ant-design-vue/es/locale/zh_CN";
 const appStore = useAppStore();
 const userStore = useUserStore();
 const appTitle = computed(() => appStore.title);
-const watermarkContent = computed(() => appStore.watermarkContent(userStore));
 
 const name = computed(() => userStore.name);
 const role = computed(() => userStore.role);
