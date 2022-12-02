@@ -67,7 +67,9 @@ const sortAndFilterMenuData = (menuData) => {
     .sort((a, b) => {
       return typeof a?.meta?.sort === "number" && typeof b?.meta?.sort === "number" ? a?.meta?.sort - b?.meta?.sort : 0;
     })
-    .filter((i) => permissionStore.checkPermission(i?.meta?.permissions));
+    .filter((i) => {
+      return i?.meta?.requiresAuth ? permissionStore.checkPermission(i?.meta?.permissions) : true;
+    });
 };
 
 const loading = ref(false);

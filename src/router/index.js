@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: "/",
       name: "index",
-      redirect: userSettings.homePath,
+      redirect: userSettings.homePath === "/" ? undefined : userSettings.homePath,
       component: BASIC_LAYOUT,
       meta: {
         title: "首页",
