@@ -65,11 +65,11 @@ if (responseSetting) {
           });
         } else {
           notification.error({
-            message: data.msg || "未知错误",
+            message: data.message || "未知错误",
           });
         }
 
-        return Promise.reject(new Error(data.msg || "Error"));
+        return Promise.reject(new Error(data.message || "Error"));
       }
 
       return resData;
