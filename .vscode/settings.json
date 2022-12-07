@@ -1,0 +1,15 @@
+{
+  "eslint.validate": ["javascript", "javascriptvue", "typescript", "typescriptreact", "vue", "html"],
+  "prettier.enable": false,
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "cSpell.words": ["echarts", "nprogress", "commitlint", "stylelint", "vuex", "qrcode", "pinia", "nuxt", "nprogress"],
+  "vetur.validation.template": false,
+  "vetur.validation.script": false,
+  "vetur.validation.style": false,
+  "vetur.grammar.customBlocks": {
+    "route": "json"
+  }
+}
