@@ -82,8 +82,8 @@ if (responseSetting) {
 
         if (status === 401) {
           notification.error({
-            message: "登录已过期",
-            description: "授权验证失败",
+            message: "操作未授权",
+            description: message || "授权验证失败",
           });
           if (token) {
             useUserStore()
