@@ -12,7 +12,7 @@
     <template v-slot:overlay>
       <a-menu class="drop-down menu" :selected-keys="[]">
         <template v-if="Array.isArray(userNavigation) && userNavigation.length > 0">
-          <a-menu-item v-for="item in userNavigation" :key="item.label" @click="item.handleFn">
+          <a-menu-item v-for="item in userNavigation" :key="item.label" @click="item.handleFn($router)">
             {{ item.label }}
           </a-menu-item>
 
