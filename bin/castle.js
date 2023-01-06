@@ -6,7 +6,7 @@ const program = new Command();
 
 program.name("Castle CLI").description("Castle 脚手架").version(require("../package.json").version);
 
-const configPath = path.resolve(process.cwd(), "./node_modules/@castle/castle-template/vite.config.js");
+const configPath = path.resolve(__dirname, "../vite.config.js");
 
 // program.version(require("../package.json").version).usage("<command> [options] ");
 
