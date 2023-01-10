@@ -27,7 +27,10 @@
         <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
       </template>
 
-      <PageContainer :title="$route.meta.title" :sub-title="$route.meta.subTitle">
+      <PageContainer
+        :title="$route.meta.showPageTitle !== false && $route.meta.title"
+        :sub-title="$route.meta.subTitle"
+      >
         <PageLayout />
       </PageContainer>
     </pro-layout>
