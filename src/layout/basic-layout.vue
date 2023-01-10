@@ -1,40 +1,35 @@
 <template>
-  <a-config-provider v-bind="{ locale: zhCN, ...(userSettings?.themeConfigProvider || {}) }">
-    <pro-layout
-      v-bind="layoutConf"
-      v-model:openKeys="state.openKeys"
-      v-model:collapsed="state.collapsed"
-      v-model:selectedKeys="state.selectedKeys"
-      :breadcrumb="{ routes: breadcrumb }"
-      :loading="loading"
-    >
-      <template #menuHeaderRender>
-        <RouterLink to="/">
-          <img src="@/assets/images/logo.png" />
-          <h1 class="logo-title">{{ appTitle }}</h1>
-        </RouterLink>
-      </template>
+  <pro-layout
+    v-bind="layoutConf"
+    v-model:openKeys="state.openKeys"
+    v-model:collapsed="state.collapsed"
+    v-model:selectedKeys="state.selectedKeys"
+    :breadcrumb="{ routes: breadcrumb }"
+    :loading="loading"
+  >
+    <template #menuHeaderRender>
+      <RouterLink to="/">
+        <img src="@/assets/images/logo.png" />
+        <h1 class="logo-title">{{ appTitle }}</h1>
+      </RouterLink>
+    </template>
 
-      <!-- custom breadcrumb itemRender  -->
-      <template #breadcrumbRender="{ route, params, routes }">
-        <span v-if="routes.indexOf(route) === routes.length - 1">{{ route.breadcrumbName }}</span>
-        <RouterLink v-else :to="{ path: route.path, params }">
-          {{ route.breadcrumbName }}
-        </RouterLink>
-      </template>
+    <!-- custom breadcrumb itemRender  -->
+    <template #breadcrumbRender="{ route, params, routes }">
+      <span v-if="routes.indexOf(route) === routes.length - 1">{{ route.breadcrumbName }}</span>
+      <RouterLink v-else :to="{ path: route.path, params }">
+        {{ route.breadcrumbName }}
+      </RouterLink>
+    </template>
 
-      <template #rightContentRender>
-        <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
-      </template>
+    <template #rightContentRender>
+      <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
+    </template>
 
-      <PageContainer
-        :title="$route.meta.showPageTitle !== false && $route.meta.title"
-        :sub-title="$route.meta.subTitle"
-      >
-        <PageLayout />
-      </PageContainer>
-    </pro-layout>
-  </a-config-provider>
+    <PageContainer :title="$route.meta.showPageTitle !== false && $route.meta.title" :sub-title="$route.meta.subTitle">
+      <PageLayout />
+    </PageContainer>
+  </pro-layout>
 </template>
 
 <script setup>
@@ -48,7 +43,6 @@ import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
 // @ts-ignore
 import userSettings from "@/config/settings.js";
-import zhCN from "ant-design-vue/es/locale/zh_CN";
 
 const appStore = useAppStore();
 const userStore = useUserStore();

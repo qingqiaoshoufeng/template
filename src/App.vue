@@ -1,6 +1,8 @@
 <script setup>
 import { ref, watch, markRaw, computed } from "vue";
 import { RouterView, useRoute } from "vue-router";
+import userSettings from "@/config/settings.js";
+import zhCN from "ant-design-vue/es/locale/zh_CN";
 
 const LAYOUTS = {
   default: import("#/layout/basic-layout.vue"),
@@ -23,8 +25,10 @@ const isAppRoutes = computed(() => route.matched.map((i) => i.path).includes("/"
 </script>
 
 <template>
-  <component v-if="isAppRoutes" :is="layout" />
-  <RouterView v-else />
+  <a-config-provider v-bind="{ locale: zhCN, ...(userSettings?.themeConfigProvider || {}) }">
+    <component v-if="isAppRoutes" :is="layout" />
+    <RouterView v-else />
+  </a-config-provider>
 </template>
 
 <style scoped></style>
