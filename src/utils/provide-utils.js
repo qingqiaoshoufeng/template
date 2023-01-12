@@ -1,3 +1,4 @@
+import * as castleStores from "../store";
 import * as request from "./request";
 import * as rsaEncrypt from "./rsaEncrypt";
 import * as eventBus from "./event-bus";
@@ -9,7 +10,7 @@ const checkPermission = (codes) => {
   return permissionStore.checkPermission(codes);
 };
 
-const utils = { ...request, ...rsaEncrypt, ...eventBus, checkPermission };
+const utils = { castleStores, ...request, ...rsaEncrypt, ...eventBus, checkPermission };
 
 export default (app) => {
   for (const i in utils) {
