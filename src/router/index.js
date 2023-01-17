@@ -7,18 +7,17 @@ import userSettings from "@/config/settings.js";
 import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css";
 
-// const BASIC_LAYOUT = () => import("#/layout/basic-layout.vue");
-
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: userSettings?.router?.history
+    ? userSettings.router.history(import.meta.env.BASE_URL)
+    : createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
       name: "index",
       redirect: userSettings.homePath === "/" ? undefined : userSettings.homePath,
-      // component: BASIC_LAYOUT,
       meta: {
         title: "首页",
         requiresAuth: false,
