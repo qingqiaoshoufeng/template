@@ -26,7 +26,13 @@
       <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
     </template>
 
-    <PageContainer :title="$route.meta.showPageTitle !== false && $route.meta.title" :sub-title="$route.meta.subTitle">
+    <PageContainer
+      :title="$route.meta.showPageTitle !== false && !userSettings.multiTab && $route.meta.title"
+      :sub-title="$route.meta.subTitle"
+    >
+      <template v-if="userSettings.multiTab" #content>
+        <MultiTab />
+      </template>
       <PageLayout />
     </PageContainer>
   </pro-layout>
@@ -43,6 +49,8 @@ import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
 // @ts-ignore
 import userSettings from "@/config/settings.js";
+
+import MultiTab from "#/components/multi-tab/index.vue";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -123,5 +131,9 @@ const breadcrumb = computed(() =>
 <style scoped>
 .logo-title {
   margin-right: 16px;
+}
+
+:deep(.ant-page-header-content) {
+  margin-bottom: -16px;
 }
 </style>
