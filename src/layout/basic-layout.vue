@@ -5,7 +5,6 @@
     v-model:collapsed="state.collapsed"
     v-model:selectedKeys="state.selectedKeys"
     :breadcrumb="{ routes: breadcrumb }"
-    :loading="loading"
   >
     <template #menuHeaderRender>
       <RouterLink to="/">
@@ -33,7 +32,9 @@
       <template v-if="userSettings.multiTab" #content>
         <MultiTab />
       </template>
-      <PageLayout />
+      <a-spin :spinning="loading">
+        <PageLayout />
+      </a-spin>
     </PageContainer>
   </pro-layout>
 </template>
