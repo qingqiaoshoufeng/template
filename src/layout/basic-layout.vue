@@ -65,17 +65,21 @@ const { menuData } = getMenuData(clearMenuItem(router.getRoutes()));
 
 const permissionStore = usePermissionStore();
 const sortAndFilterMenuData = (menuData) => {
-  menuData.forEach((element) => {
-    if (element?.children) return sortAndFilterMenuData(element?.children);
-  });
-
-  return menuData
+  const handledMenuData = menuData
     .sort((a, b) => {
       return typeof a?.meta?.sort === "number" && typeof b?.meta?.sort === "number" ? a?.meta?.sort - b?.meta?.sort : 0;
     })
     .filter((i) => {
-      return i?.meta?.requiresAuth ? permissionStore.checkPermission(i?.meta?.permissions) : true;
+      const requiresAuth = i?.meta?.requiresAuth ?? true;
+      const permissions = i?.meta?.permissions ?? [];
+      return requiresAuth ? permissionStore.checkPermission(permissions) : true;
     });
+
+  handledMenuData.forEach((element) => {
+    if (element?.children) element.children = sortAndFilterMenuData(element?.children);
+  });
+
+  return handledMenuData;
 };
 
 const loading = ref(false);
