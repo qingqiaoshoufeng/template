@@ -1,31 +1,30 @@
 <template>
-  <a-dropdown v-if="currentUser && currentUser.name" placement="bottomRight">
+  <a-dropdown placement="bottomRight">
     <span class="account-avatar">
-      <a-avatar :size="30" style="background-color: #53abfd">
+      <a-avatar :size="28" style="background-color: #3a5a78">
         <template #icon>
           <UserOutlined />
         </template>
       </a-avatar>
-      <span class="account-name">{{ currentUser.name }}</span>
+      <span class="account-name">{{ currentUser.name || "未登录" }}</span>
       <DownOutlined />
     </span>
     <template v-slot:overlay>
       <a-menu class="drop-down menu" :selected-keys="[]">
         <template v-if="Array.isArray(userNavigation) && userNavigation.length > 0">
-          <a-menu-item v-for="item in userNavigation" :key="item.label" @click="item.handleFn($router)">
-            {{ item.label }}
-          </a-menu-item>
+          <template v-for="item in userNavigation" :key="item.label">
+            <a-menu-item v-if="item?.displayFn && item.displayFn() !== false" @click="item.handleFn($router)">
+              {{ item.label }}
+            </a-menu-item>
+          </template>
 
           <a-menu-divider />
         </template>
 
-        <a-menu-item key="logout" @click="handleLogout"> 退出 </a-menu-item>
+        <a-menu-item v-if="currentUser?.name" key="logout" @click="handleLogout"> 退出 </a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
-  <span v-else>
-    <a-spin size="small" :style="{ marginLeft: 8, marginRight: 8 }" />
-  </span>
 </template>
 
 <script>
