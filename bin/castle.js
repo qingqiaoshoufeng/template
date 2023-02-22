@@ -28,6 +28,7 @@ const handleAction = (command, str, { args = [] }) => {
 
 program
   .command("dev")
+  .description("在当前目录下启动 Vite 开发服务器")
   .option("--base <path>", `[string] public base path (default: /)`)
   .option("-l, --logLevel <level>", `[string] info | warn | error | silent`)
   .option("--clearScreen", `[boolean] allow/disable clear screen when logging`)
@@ -47,6 +48,7 @@ program
 
 program
   .command("build")
+  .description("构建生产版本")
   .option("-m, --mode <mode>", `[string] set env mode`)
   .option("--target <target>", `[string] transpile target (default: 'modules')`)
   .option("--outDir <dir>", `[string] output directory (default: dist)`)
@@ -68,10 +70,24 @@ program
   });
 
 program
-  .command("optimize", "pre-bundle dependencies")
+  .command("optimize")
+  .description("预构建依赖")
   .option("--force", `[boolean] force the optimizer to ignore the cache and re-bundle`)
   .action((...args) => {
     handleAction(...["optimize", ...args]);
+  });
+
+program
+  .command("preview")
+  .description("本地预览构建产物")
+  .option("--host [host]", `[string] specify hostname`)
+  .option("--port <port>", `[number] specify port`)
+  .option("--strictPort", `[boolean] exit if specified port is already in use`)
+  .option("--https", `[boolean] use TLS + HTTP/2`)
+  .option("--open [path]", `[boolean | string] open browser on startup`)
+  .option("--outDir <dir>", `[string] output directory (default: dist)`)
+  .action((...args) => {
+    handleAction(...["preview", ...args]);
   });
 
 program.parse(process.argv);
