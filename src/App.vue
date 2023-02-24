@@ -1,8 +1,9 @@
 <script setup>
-import { ref, watch, markRaw, computed } from "vue";
-import { RouterView, useRoute } from "vue-router";
+import { ref, markRaw, computed } from "vue";
+import { RouterView, useRoute, useRouter } from "vue-router";
 import userSettings from "@/config/settings.js";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
+import { bus } from "#/utils/event-bus";
 
 const LAYOUTS = {
   default: import("#/layout/basic-layout.vue"),
@@ -10,16 +11,21 @@ const LAYOUTS = {
 };
 
 const route = useRoute();
+const router = useRouter();
 const layout = ref();
+let lastLayoutType = "";
 
-watch(
-  () => route?.meta?.layout,
-  async (metaLayout) => {
-    const component = (await LAYOUTS[metaLayout]) || (await LAYOUTS["default"]);
-    layout.value = markRaw(component?.default);
-  },
-  { immediate: true },
-);
+const handleLayout = async ({ metaLayout, toRouter }) => {
+  if (lastLayoutType === metaLayout) return;
+  lastLayoutType = metaLayout;
+
+  setTimeout(() => router.push(toRouter.path));
+
+  const component = (await LAYOUTS[metaLayout]) || (await LAYOUTS["default"]);
+  layout.value = markRaw(component?.default);
+};
+
+bus.on("CASTLE__changeLayout", (e) => handleLayout(e));
 
 const isAppRoutes = computed(() => route.matched.map((i) => i.path).includes("/"));
 </script>
