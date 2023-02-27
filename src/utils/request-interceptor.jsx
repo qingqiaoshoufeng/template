@@ -53,21 +53,21 @@ if (responseSetting) {
         if (code === 403) {
           notification.error({
             message: "无权限",
-            description: <RequestErrorInfo description={description}`} response={response} />
+            description: <RequestErrorInfo description={description} response={response} />
           });
         } else if (code === 406) {
           notification.info({
             message: "非法参数",
-            description,
+            description: <RequestErrorInfo description={description} response={response} />
           });
         } else if (code === 500) {
           notification.error({
             message: "系统内部错误",
-            description: <RequestErrorInfo description={description}`} response={response} />
+            description: <RequestErrorInfo description={description} response={response} />
           });
         } else {
           notification.error({
-            message: <RequestErrorInfo description={description || "未知错误"}`} response={response} />
+            message: <RequestErrorInfo description={description || "未知错误"} response={response} />
           });
         }
 

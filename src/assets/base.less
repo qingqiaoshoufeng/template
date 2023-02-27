@@ -8,6 +8,30 @@
   height: 100%;
 }
 
+.ant-layout-content {
+  height: 0;
+  overflow-y: auto;
+}
+.ant-pro-basicLayout-content, .ant-pro-basicLayout-content .ant-pro-page-container {
+  margin: 0;
+}
+.ant-pro-grid-content-children {
+  padding-bottom: 24px;
+}
+
+.ant-pro-page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.ant-pro-grid-content {
+  flex: 1;
+  // overflow-y: auto;
+  min-height: 0;
+}
+
+
 .ant-pro-global-header-layout-mix {
   background-color: #1f2e54;
 }
@@ -30,3 +54,5 @@
     }
   }
 }
+
+
