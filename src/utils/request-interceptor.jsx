@@ -1,9 +1,11 @@
+import { defineComponent } from 'vue'
 import axios from "axios";
 import { notification } from "ant-design-vue";
 import { useUserStore } from "#/store";
 import { getToken } from "#/utils/auth";
 import userSettings from "@/config/settings.js";
 import { getCodeMessages } from "#/utils/http-code-messages";
+import RequestErrorInfo from "#/components/request-error-info/index.vue";
 
 import "ant-design-vue/es/message/style/css";
 
@@ -45,27 +47,27 @@ if (responseSetting) {
   axios.interceptors.response.use(
     (response) => {
       const { data } = response;
-      const { code, data: resData } = data;
-
+      const { code, data: resData, message, msg } = data;
+      const description = message || msg;
       if (code !== 200) {
         if (code === 403) {
           notification.error({
             message: "无权限",
-            description: data.message,
+            description: <RequestErrorInfo description={description}`} response={response} />
           });
         } else if (code === 406) {
           notification.info({
             message: "非法参数",
-            description: data.message,
+            description,
           });
         } else if (code === 500) {
           notification.error({
             message: "系统内部错误",
-            description: data.message,
+            description: <RequestErrorInfo description={description}`} response={response} />
           });
         } else {
           notification.error({
-            message: data.message || "未知错误",
+            message: <RequestErrorInfo description={description || "未知错误"}`} response={response} />
           });
         }
 
@@ -77,13 +79,14 @@ if (responseSetting) {
     (error) => {
       if (error.response) {
         const { status, statusText, data } = error.response;
-        const { message } = data;
+        const { message, msg } = data;
+        const description = message || msg;
         const token = getToken();
 
         if (status === 401) {
           notification.error({
             message: "操作未授权",
-            description: message || "授权验证失败",
+            description: description || "授权验证失败",
           });
           if (token) {
             useUserStore()
@@ -97,7 +100,7 @@ if (responseSetting) {
         } else {
           notification.error({
             message: `${status} ${statusText}` || "请求失败",
-            description: message || getCodeMessages(status) || `未知错误 ${statusText}`,
+            description: <RequestErrorInfo description={message || getCodeMessages(status) || `未知错误 ${statusText}`} response={error.response} />
           });
         }
       }
