@@ -6,6 +6,8 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import Pages from "vite-plugin-pages";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import { merge } from "lodash";
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
 // https://vitejs.dev/config/
 export default async ({ command, mode }) => {
@@ -27,6 +29,9 @@ export default async ({ command, mode }) => {
         exclude: ["**/*/_*.@(vue|js|jsx)"],
       }),
       vueSetupExtend(),
+      Components({
+        resolvers: [AntDesignVueResolver()],
+      }),
     ],
     server: server && server({ command, mode, env }),
     resolve: {

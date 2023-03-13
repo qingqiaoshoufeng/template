@@ -15,11 +15,11 @@ const router = useRouter();
 const layout = ref();
 let lastLayoutType = "";
 
-const handleLayout = async ({ metaLayout, toRouter }) => {
+const handleLayout = async ({ metaLayout, to }) => {
   if (lastLayoutType === metaLayout) return;
   lastLayoutType = metaLayout;
 
-  setTimeout(() => router.push(toRouter.path));
+  setTimeout(() => router.push(to));
 
   const component = (await LAYOUTS[metaLayout]) || (await LAYOUTS["default"]);
   layout.value = markRaw(component?.default);
