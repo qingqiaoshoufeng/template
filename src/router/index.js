@@ -30,6 +30,7 @@ const router = createRouter({
       component: () => import("#/views/login/index.vue"),
       meta: {
         requiresAuth: false,
+        permissions: [],
       },
     },
     NOT_FOUND_ROUTE,

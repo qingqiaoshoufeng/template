@@ -4,6 +4,7 @@ export const NOT_FOUND_ROUTE = {
   component: () => import("#/views/exception/404.vue"),
   meta: {
     requiresAuth: false,
+    permissions: [],
   },
 };
 
@@ -13,5 +14,6 @@ export const FORBIDDEN_ROUTE = {
   component: () => import("#/views/exception/403.vue"),
   meta: {
     requiresAuth: false,
+    permissions: [],
   },
 };
