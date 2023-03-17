@@ -132,7 +132,7 @@ const openPlatform = () => {
   }
   setToken("Castle Platform");
   window.open(
-    `http://castle-platform.cp.hxdi.cn/auto-login?developer=${developerUserName}&project=${projectName}&redirect=${window.location.href}`,
+    `http://castle-platform.cp.hxdi.cn/auto-login?developer=${developerUserName}&project=${projectName}&redirect=${window.location.origin}`,
   );
 };
 </script>
