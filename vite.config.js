@@ -55,6 +55,13 @@ export default async ({ command, mode }) => {
         "jsencrypt",
       ],
     },
+    css: {
+      preprocessorOptions: {
+        less: {
+          javascriptEnabled: true,
+        },
+      },
+    },
   });
 
   const userConfig = vite && vite({ command, mode, env });
