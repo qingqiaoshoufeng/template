@@ -7,8 +7,8 @@ import provideUtils from "#/utils/provide-utils.js";
 import PermissionDirective from "#/directive/permission";
 import userSettings from "@/config/settings.js";
 
-import "ant-design-vue/dist/antd.variable.less";
 import "@ant-design-vue/pro-layout/dist/style.css";
+import "ant-design-vue/dist/antd.variable.less";
 import "#/assets/base.less";
 
 import App from "./App.vue";
