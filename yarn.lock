@@ -1607,6 +1607,11 @@ csstype@^2.6.8:
   resolved "http://10.13.4.128:4873/csstype/-/csstype-2.6.20.tgz"
   integrity sha512-/WwNkdXfckNgw6S5R125rrW8ez139lBHWouiBvX8dfMFtcn6V81REDqnH7+CRpRipfYlyU1CmOnOxrmGcFOjeA==
 
+darkreader@^4.9.58:
+  version "4.9.58"
+  resolved "http://10.13.4.128:4873/darkreader/-/darkreader-4.9.58.tgz#6544d6cb51fa643dc7995d128d32b357e1650e49"
+  integrity sha512-D/JGoJqW3m2AWBLhO+Pev+eThfs+CwRT4bcLb/1zKjql2yVwG0lx8C2XRDdSVGHw4y11n26W7syWoBpUfuhMqQ==
+
 data-urls@^3.0.2:
   version "3.0.2"
   resolved "http://10.13.4.128:4873/data-urls/-/data-urls-3.0.2.tgz"

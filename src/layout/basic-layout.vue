@@ -22,7 +22,10 @@
     </template>
 
     <template #rightContentRender>
-      <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
+      <a-space :size="10">
+        <darkness-mode-switch v-if="userSettings?.darkness?.showSwitch" />
+        <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
+      </a-space>
     </template>
 
     <PageContainer
@@ -46,6 +49,8 @@ import PageLayout from "./page-layout.vue";
 import { getMenuData, clearMenuItem } from "@ant-design-vue/pro-layout";
 // @ts-ignore
 import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
+import darknessModeSwitch from "#/components/darkness-mode-switch/index.vue";
+
 // @ts-ignore
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
 // @ts-ignore

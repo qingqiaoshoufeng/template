@@ -1,5 +1,5 @@
 <template>
-  <div class="login-wrap-bg">
+  <div class="castle-login-wrap-bg">
     <header class="ant-layout-header ant-pro-fixed-header login-header">
       <div class="ant-pro-global-header ant-pro-global-header-layout-mix">
         <div class="ant-pro-global-header-logo">
@@ -138,11 +138,11 @@ const openPlatform = () => {
 </script>
 
 <style lang="less" scoped>
-.login-wrap-bg {
+.castle-login-wrap-bg {
   height: 100vh;
-  background-image: url("@/assets/images/login-bg-white.png");
-  background-size: cover;
-  background-position: 100%;
+  // background-image: url("@/assets/images/login-bg-white.png");
+  // background-size: cover;
+  // background-position: 100%;
 }
 
 .login-form-wrap {

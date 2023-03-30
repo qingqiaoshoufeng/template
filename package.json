@@ -1,6 +1,6 @@
 {
   "name": "@castle/castle-template",
-  "version": "0.0.79",
+  "version": "0.0.80",
   "bin": {
     "castle": "bin/castle.js"
   },
@@ -30,6 +30,7 @@
     "autoprefixer": "^10.4.8",
     "axios": "^1.1.2",
     "commander": "^9.4.0",
+    "darkreader": "^4.9.58",
     "eslint": "^8.29.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.3.0",
