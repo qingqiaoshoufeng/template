@@ -1,14 +1,14 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import Antd from "ant-design-vue";
-import ProLayout, { PageContainer } from "@ant-design-vue/pro-layout";
+import Antd from "@castle/ant-design-vue";
+import ProLayout, { PageContainer } from "@castle/pro-layout";
 import registerIcons from "#/utils/register-icons.js";
 import provideUtils from "#/utils/provide-utils.js";
 import PermissionDirective from "#/directive/permission";
 import userSettings from "@/config/settings.js";
 
-import "@ant-design-vue/pro-layout/dist/style.css";
-import "ant-design-vue/dist/antd.variable.less";
+import "@castle/pro-layout/dist/style.css";
+import "@castle/ant-design-vue/dist/antd.variable.less";
 import "#/assets/base.less";
 
 import App from "./App.vue";

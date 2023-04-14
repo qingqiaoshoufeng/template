@@ -71,7 +71,7 @@
 <script setup>
 import { computed, reactive, inject, ref, createVNode } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import { Modal } from "ant-design-vue";
+import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 // @ts-ignore
 import { useAppStore, useUserStore } from "#/store";

@@ -1,6 +1,6 @@
 {
   "name": "@castle/castle-template",
-  "version": "0.0.80",
+  "version": "0.0.81",
   "bin": {
     "castle": "bin/castle.js"
   },
@@ -18,15 +18,15 @@
     "preinstall": "npx only-allow yarn"
   },
   "dependencies": {
-    "@ant-design-vue/pro-layout": "^3.2.3",
     "@ant-design/icons-vue": "^6.1.0",
     "@antfu/eslint-config": "^0.33.1",
+    "@castle/ant-design-vue": "^3.2.15-castle.1",
+    "@castle/pro-layout": "^3.2.3",
     "@rushstack/eslint-patch": "^1.1.4",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/test-utils": "^2.0.2",
-    "ant-design-vue": "^3.2.11",
     "autoprefixer": "^10.4.8",
     "axios": "^1.1.2",
     "commander": "^9.4.0",

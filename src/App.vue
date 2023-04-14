@@ -2,7 +2,7 @@
 import { ref, markRaw, computed } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import userSettings from "@/config/settings.js";
-import zhCN from "ant-design-vue/es/locale/zh_CN";
+import zhCN from "@castle/ant-design-vue/es/locale/zh_CN";
 import { bus } from "#/utils/event-bus";
 import {
   enable as enableDarkMode,

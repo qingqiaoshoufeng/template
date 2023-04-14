@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { Modal } from "ant-design-vue";
+import { Modal } from "@castle/ant-design-vue";
 import { mapActions } from "pinia";
 import { useUserStore } from "#/store";
 import userSettings from "@/config/settings.js";

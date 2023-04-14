@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { Button as AButton, BadgeRibbon as ABadgeRibbon } from "ant-design-vue";
+import { Button as AButton, BadgeRibbon as ABadgeRibbon } from "@castle/ant-design-vue";
 export default {
   name: "RequestErrorInfo",
   components: {

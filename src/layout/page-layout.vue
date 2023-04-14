@@ -12,7 +12,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { WaterMark } from "@ant-design-vue/pro-layout";
+import { WaterMark } from "@castle/pro-layout";
 // @ts-ignore
 import { useTabBarStore, useAppStore, useUserStore } from "#/store";
 

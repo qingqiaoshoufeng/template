@@ -46,7 +46,7 @@
 import { reactive, computed, watchEffect, ref, inject } from "vue";
 import { useRouter } from "vue-router";
 import PageLayout from "./page-layout.vue";
-import { getMenuData, clearMenuItem } from "@ant-design-vue/pro-layout";
+import { getMenuData, clearMenuItem } from "@castle/pro-layout";
 // @ts-ignore
 import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import darknessModeSwitch from "#/components/darkness-mode-switch/index.vue";
@@ -103,9 +103,9 @@ const state = reactive({
   },
 });
 
-// 更多配置参考 https://www.npmjs.com/package/@ant-design-vue/pro-layout
+// 更多配置参考 https://www.npmjs.com/package/@castle/pro-layout
 const layoutConf = reactive({
-  // navTheme: "dark",
+  // navTheme: "realDark",
   headerTheme: "dark",
   layout: "mix",
   splitMenus: false,

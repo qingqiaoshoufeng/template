@@ -1,13 +1,13 @@
 import { defineComponent } from 'vue'
 import axios from "axios";
-import { notification } from "ant-design-vue";
+import { notification } from "@castle/ant-design-vue";
 import { useUserStore } from "#/store";
 import { getToken } from "#/utils/auth";
 import userSettings from "@/config/settings.js";
 import { getCodeMessages } from "#/utils/http-code-messages";
 import RequestErrorInfo from "#/components/request-error-info/index.vue";
 
-import "ant-design-vue/es/message/style/css";
+import "@castle/ant-design-vue/es/message/style/css";
 
 if (import.meta.env.VITE_API_BASE_URL) {
   axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL;

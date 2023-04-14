@@ -43,9 +43,9 @@ export default async ({ command, mode }) => {
     },
     optimizeDeps: {
       include: [
-        "ant-design-vue",
-        "ant-design-vue/es/locale/zh_CN",
-        "@ant-design-vue/pro-layout",
+        "@castle/ant-design-vue",
+        "@castle/ant-design-vue/es/locale/zh_CN",
+        "@castle/pro-layout",
         "@ant-design/icons-vue",
         "@ant-design/icons-svg",
         "axios",
