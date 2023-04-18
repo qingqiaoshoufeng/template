@@ -1,6 +1,6 @@
 {
   "name": "@castle/castle-template",
-  "version": "0.0.81",
+  "version": "1.0.0",
   "bin": {
     "castle": "bin/castle.js"
   },
@@ -20,8 +20,6 @@
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
     "@antfu/eslint-config": "^0.33.1",
-    "@castle/ant-design-vue": "^3.2.15-castle.1",
-    "@castle/pro-layout": "^3.2.3",
     "@rushstack/eslint-patch": "^1.1.4",
     "@vitejs/plugin-vue": "^4.0.0",
     "@vitejs/plugin-vue-jsx": "^3.0.0",

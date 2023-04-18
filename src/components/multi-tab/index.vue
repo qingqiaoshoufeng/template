@@ -167,4 +167,39 @@ export default {
 };
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+:deep(.ant-pro-multi-tab-wrapper) {
+  border-radius: 0 !important;
+  .ant-tabs-tab {
+    align-items: baseline;
+    border-radius: 0!important;
+    border: none;
+    border-top: solid 3px #eee;
+    .ant-tabs-tab-remove {
+      border-radius: 3px;
+      padding-left: 0;
+      padding-right: 0;
+      &:hover{
+        background-color: #ddd;
+      }
+      width: 0;
+      overflow: hidden;
+    }
+    &.ant-tabs-tab-active {
+      background-color: #f0f2f5!important;
+      font-weight: bold;
+      border-top: solid 3px var(--ant-primary-color);
+    }
+    &:hover {
+      background-color: #f0f2f5!important;
+      border-top: solid 3px var(--ant-primary-color-hover);
+      & > .ant-tabs-tab-remove {
+        // display: inline-block;
+        width: auto;
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
+  }
+}
+</style>

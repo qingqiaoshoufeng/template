@@ -4,7 +4,7 @@
     v-model:openKeys="state.openKeys"
     v-model:collapsed="state.collapsed"
     v-model:selectedKeys="state.selectedKeys"
-    :breadcrumb="{ routes: breadcrumb }"
+    :breadcrumb="{ routes: userSettings?.breadcrumb?.display === true ? breadcrumb : null }"
   >
     <template #menuHeaderRender>
       <RouterLink to="/">
@@ -23,7 +23,11 @@
 
     <template #rightContentRender>
       <a-space :size="10">
-        <darkness-mode-switch v-if="userSettings?.darkness?.showSwitch" />
+        <RenderJsxComponents v-for="c in userSettings?.userNavigationComponents" :key="c" :components="c" />
+        <template v-if="userSettings?.darkness?.showSwitch">
+          <a-divider type="vertical" style="background-color: #6f8edd" />
+          <darkness-mode-switch />
+        </template>
         <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
       </a-space>
     </template>
@@ -57,6 +61,7 @@ import { useAppStore, useUserStore, usePermissionStore } from "#/store";
 import userSettings from "@/config/settings.js";
 
 import MultiTab from "#/components/multi-tab/index.vue";
+import RenderJsxComponents from "#/components/render-jsx-components/index";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -143,7 +148,12 @@ const breadcrumb = computed(() =>
   margin-right: 16px;
 }
 
+:deep(.ant-page-header) {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 :deep(.ant-page-header-content) {
-  margin-bottom: -16px;
+  padding-top: 8px;
 }
 </style>
