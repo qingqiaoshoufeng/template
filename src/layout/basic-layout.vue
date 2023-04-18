@@ -23,7 +23,7 @@
 
     <template #rightContentRender>
       <a-space :size="10">
-        <RenderJsxComponents v-for="c in userSettings?.userNavigationComponents" :key="c" :componentVnode="c" />
+        <RenderJsxComponents v-for="c in userSettings?.topNavigationCustomComponents" :key="c" :componentVnode="c" />
         <template v-if="userSettings?.darkness?.showSwitch">
           <a-divider type="vertical" style="background-color: #6f8edd" />
           <darkness-mode-switch />
