@@ -33,6 +33,37 @@
                 </a-input-password>
               </a-form-item>
 
+              <a-row v-if="getVerificationCodeFn" :gutter="[16, 16]" justify="space-between" align="middle">
+                <a-col :span="14">
+                  <a-form-item name="verificationCode" :rules="[{ required: true, message: '请输入验证码' }]">
+                    <a-input placeholder="验证码" size="large" v-model:value="formState.verificationCode">
+                      <template #suffix>
+                        <a-tooltip title="点击刷新图形验证码">
+                          <SyncOutlined
+                            class="site-form-item-icon"
+                            style="cursor: pointer"
+                            @click="getVerificationCode"
+                            :spin="codeLoading"
+                          />
+                        </a-tooltip>
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="10">
+                  <a-spin :spinning="codeLoading">
+                    <a-form-item>
+                      <img
+                        v-if="verificationCodeImgSrc"
+                        style="height: 40px; float: right"
+                        :src="verificationCodeImgSrc"
+                        alt="code"
+                      />
+                    </a-form-item>
+                  </a-spin>
+                </a-col>
+              </a-row>
+
               <a-form-item v-if="false">
                 <a-form-item name="remember" no-style>
                   <a-checkbox v-model:checked="formState.remember">记住账号</a-checkbox>
@@ -59,6 +90,12 @@
                 </ABadgeRibbon>
               </a-form-item>
             </a-form>
+
+            <RenderJsxComponents
+              v-for="c in userSettings?.userApiImplement?.customComponents"
+              :key="c"
+              :componentVnode="c"
+            />
           </div>
         </a-col>
       </a-row>
@@ -69,13 +106,19 @@
 </template>
 
 <script setup>
-import { computed, reactive, inject, ref, createVNode } from "vue";
+import { computed, reactive, inject, ref, createVNode, onMounted } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import MD5 from "md5-es/src/md5";
 import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 // @ts-ignore
 import { useAppStore, useUserStore } from "#/store";
 import { setToken } from "#/utils/auth";
+import userSettings from "@/config/settings.js";
+import RenderJsxComponents from "#/components/render-jsx-components/index";
+
+const showErrInfo = ["development"].includes(import.meta.env.MODE);
+const isDevelopmentEnv = showErrInfo;
 
 const encrypt = inject("encrypt");
 
@@ -88,18 +131,29 @@ const copyright = computed(() => appStore.copyright);
 const formState = reactive({
   username: "",
   password: "",
+  verificationCode: "",
   remember: false,
 });
 
 let loading = ref(false);
 
-const onFinish = (formData) => {
+const onFinish = async (formData) => {
   loading.value = true;
   const userStore = useUserStore();
   const { redirect, ...othersQuery } = router.currentRoute.value.query;
 
+  const PUBLIC_KEY = await userSettings?.userApiImplement?.rsaPublicKey();
+  if (!PUBLIC_KEY && isDevelopmentEnv) {
+    console.warn(`[Castle] 未配置 RSA 公钥，请在 settings.js 里面添加 userApiImplement -> rsaPublicKey 项`);
+  }
+
   userStore
-    .login({ ...formData, encryptPassword: encrypt(formData.password) })
+    .login({
+      ...formData,
+      encryptUserName: MD5.hash(formData.username),
+      encryptPassword: encrypt(formData.password, PUBLIC_KEY),
+      encryptVerificationCodeAndPassWord: encrypt(`${formData.verificationCode}${formData.password}`, PUBLIC_KEY),
+    })
     .then(() => {
       router.push({
         // @ts-ignore
@@ -114,7 +168,21 @@ const onFinish = (formData) => {
     });
 };
 
-const showErrInfo = ["development"].includes(import.meta.env.MODE);
+const verificationCodeImgSrc = ref(null);
+
+const codeLoading = ref(false);
+const getVerificationCodeFn = userSettings?.userApiImplement?.getVerificationCode;
+const getVerificationCode = async () => {
+  codeLoading.value = true;
+  if (getVerificationCodeFn) {
+    verificationCodeImgSrc.value = await getVerificationCodeFn();
+    codeLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  getVerificationCode();
+});
 
 const openPlatform = () => {
   const developerUserName = import.meta.env.VITE_DEVELOPER_USER_NAME;
