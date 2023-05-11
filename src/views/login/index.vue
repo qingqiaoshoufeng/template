@@ -142,9 +142,14 @@ const onFinish = async (formData) => {
   const userStore = useUserStore();
   const { redirect, ...othersQuery } = router.currentRoute.value.query;
 
-  const PUBLIC_KEY = await userSettings?.userApiImplement?.rsaPublicKey();
-  if (!PUBLIC_KEY && isDevelopmentEnv) {
-    console.warn(`[Castle] 未配置 RSA 公钥，请在 settings.js 里面添加 userApiImplement -> rsaPublicKey 项`);
+  const getPublicKey = userSettings?.userApiImplement?.rsaPublicKey;
+  let PUBLIC_KEY;
+  if (getPublicKey) {
+    PUBLIC_KEY = await getPublicKey();
+  } else {
+    if (isDevelopmentEnv) {
+      console.warn(`[Castle] 未配置 RSA 公钥，请在 settings.js 里面添加 userApiImplement -> rsaPublicKey 项`);
+    }
   }
 
   userStore
