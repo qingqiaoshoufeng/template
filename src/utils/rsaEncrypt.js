@@ -1,4 +1,4 @@
-import { JSEncrypt } from "jsencrypt";
+import { JSEncrypt } from "jsencrypt/lib/index.js";
 
 const encrypt = function (txt, publicKey) {
   if (!publicKey) return "";

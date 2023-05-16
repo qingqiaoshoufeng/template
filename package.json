@@ -1,6 +1,6 @@
 {
   "name": "@castle/castle-template",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "bin": {
     "castle": "bin/castle.js"
   },
@@ -36,7 +36,6 @@
     "jsencrypt": "^3.3.1",
     "less": "^4.1.3",
     "lodash": "^4.17.21",
-    "md5-es": "^1.8.2",
     "mitt": "^3.0.0",
     "nprogress": "^0.2.0",
     "only-allow": "^1.1.1",

@@ -108,7 +108,6 @@
 <script setup>
 import { computed, reactive, inject, ref, createVNode, onMounted } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
-import MD5 from "md5-es/src/md5";
 import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 // @ts-ignore
@@ -155,9 +154,9 @@ const onFinish = async (formData) => {
   userStore
     .login({
       ...formData,
-      encryptUserName: MD5.hash(formData.username),
+      encryptUserName: encrypt(formData.username, PUBLIC_KEY),
       encryptPassword: encrypt(formData.password, PUBLIC_KEY),
-      encryptVerificationCodeAndPassWord: encrypt(`${formData.verificationCode}${formData.password}`, PUBLIC_KEY),
+      encryptVerificationCodeAndPassWord: encrypt(`${formData.verificationCode}∞${formData.password}`, PUBLIC_KEY),
     })
     .then(() => {
       router.push({
