@@ -2,12 +2,17 @@ import { createRouter, createWebHistory } from "vue-router";
 import { NOT_FOUND_ROUTE, FORBIDDEN_ROUTE } from "./routers/modules/base";
 import createRouteGuard from "./guard";
 import appRoutes from "~pages";
-
 import userSettings from "@/config/settings.js";
 import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css";
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
+
+const isDevMicroappMode = import.meta.env.MODE.indexOf("dev:microapp›") === 0;
+const microappHomePath = import.meta.env.VITE_APP_MICROAPP_HOME_PATH;
+const getHomePath = () => {
+  return isDevMicroappMode ? microappHomePath : userSettings.homePath;
+};
 
 const router = createRouter({
   history: userSettings?.router?.history
@@ -17,12 +22,12 @@ const router = createRouter({
     {
       path: "/",
       name: "index",
-      redirect: userSettings.homePath === "/" ? undefined : userSettings.homePath,
+      redirect: userSettings.homePath === "/" ? undefined : getHomePath(),
       meta: {
         title: "首页",
         requiresAuth: false,
       },
-      children: appRoutes,
+      children: appRoutes.filter((i) => i?.name.indexOf("microapp-") === -1),
     },
     {
       path: "/login",

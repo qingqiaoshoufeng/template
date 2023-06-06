@@ -1,4 +1,4 @@
-import { createApp } from "vue";
+import { createApp, Text, Comment, Fragment, Static } from "vue";
 import { createPinia } from "pinia";
 import Antd from "@castle/ant-design-vue";
 import ProLayout, { PageContainer } from "@castle/pro-layout";
@@ -37,5 +37,10 @@ app.mount("#app");
 if (typeof userSettings?.lifecycle?.mounted === "function") {
   userSettings?.lifecycle?.mounted(app);
 }
+
+window.CASTLE = app;
+window.CASTLE.loadedMicroapp = [];
+window.CASTLE.loadedMicroappRoutes = [];
+window.CASTLE.nodeTypeSymbol = { Text, Comment, Fragment, Static };
 
 export default app;

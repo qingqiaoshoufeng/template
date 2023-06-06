@@ -6,11 +6,24 @@
     v-model:selectedKeys="state.selectedKeys"
     :breadcrumb="{ routes: userSettings?.breadcrumb?.display === true ? breadcrumb : null }"
   >
-    <template #menuHeaderRender>
+    <template v-if="projectSettings.microapp?.apps" #menuHeaderRender>
       <RouterLink to="/">
         <img src="@/assets/images/logo.png" />
         <h1 class="logo-title">{{ appTitle }}</h1>
       </RouterLink>
+    </template>
+
+    <template #menuExtraRender="{ collapsed }">
+      <a-select v-if="!collapsed" v-model:value="microapp" style="width: 100%" @change="microappHandleChange">
+        <a-select-option
+          :disabled="isDevMicroappMode && microappName !== item.name"
+          :value="JSON.stringify(item)"
+          v-for="item in isEnabledMicroapp()"
+          :key="item.name"
+        >
+          {{ item.displayName }}
+        </a-select-option>
+      </a-select>
     </template>
 
     <!-- custom breadcrumb itemRender  -->
@@ -35,6 +48,7 @@
     <PageContainer
       :title="$route.meta.showPageTitle !== false && !userSettings.multiTab && $route.meta.title"
       :sub-title="$route.meta.subTitle"
+      :loading="microappLoadedLoading"
     >
       <template v-if="userSettings.multiTab" #content>
         <MultiTab />
@@ -51,27 +65,49 @@ import { reactive, computed, watchEffect, ref, inject } from "vue";
 import { useRouter } from "vue-router";
 import PageLayout from "./page-layout.vue";
 import { getMenuData, clearMenuItem } from "@castle/pro-layout";
-// @ts-ignore
 import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import darknessModeSwitch from "#/components/darkness-mode-switch/index.vue";
-
-// @ts-ignore
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
-// @ts-ignore
 import userSettings from "@/config/settings.js";
-
+import projectSettings from "@/config/project-settings.mjs";
 import MultiTab from "#/components/multi-tab/index.vue";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
 
+const bus = inject("bus");
 const appStore = useAppStore();
 const userStore = useUserStore();
 const appTitle = computed(() => appStore.title);
+const isDevMicroappMode = import.meta.env.MODE.indexOf("dev:microapp›") === 0;
 
 const name = computed(() => userStore.name);
 const role = computed(() => userStore.role);
 
+const microapp = ref(null);
+const microappLoadedLoading = ref(false);
+const microappName = import.meta.env.VITE_APP_MICROAPP_NAME;
+bus.on("castle-microapp-loaded-loading", (v) => (microappLoadedLoading.value = v));
+
+const isEnabledMicroapp = () => {
+  return projectSettings.microapp?.apps.filter((i) => {
+    return i.enabled !== false && !JSON.parse(import.meta.env.VITE_APP_NOT_ENABLED_MICROAPP ?? "[]").includes(i.name);
+  });
+};
+
 const router = useRouter();
-const { menuData } = getMenuData(clearMenuItem(router.getRoutes()));
+const handleMenuDataFlag = ref(1);
+const menuData = computed(() => {
+  const { menuData } = getMenuData(clearMenuItem(router.getRoutes()));
+  if (!microapp.value) return menuData;
+  const { name } = JSON.parse(microapp.value);
+
+  if (microapp.value && import.meta.env.VITE_APP_MICROAPP_NAME !== name && handleMenuDataFlag.value) {
+    const filteredMicroappRoutes = window.CASTLE?.loadedMicroappRoutes.filter(({ path }) => {
+      return path.indexOf(`/${name}`) === 0;
+    });
+    return getMenuData([{ path: "/", children: filteredMicroappRoutes }]).menuData;
+  }
+  return menuData;
+});
 
 const permissionStore = usePermissionStore();
 const sortAndFilterMenuData = (menuData) => {
@@ -93,7 +129,6 @@ const sortAndFilterMenuData = (menuData) => {
 };
 
 const loading = ref(false);
-const bus = inject("bus");
 
 bus.on("castle-global-loading", (status) => (loading.value = status));
 
@@ -114,8 +149,12 @@ const layoutConf = reactive({
   headerTheme: "dark",
   layout: "mix",
   splitMenus: false,
-  menuData: sortAndFilterMenuData(menuData),
+  menuData: computed(() => sortAndFilterMenuData(menuData.value)),
   ...userSettings?.layout,
+});
+
+bus.on("castle-microapp-loaded", () => {
+  handleMenuDataFlag.value += 1;
 });
 
 watchEffect(() => {
@@ -123,13 +162,16 @@ watchEffect(() => {
     const matched = router.currentRoute.value.matched.concat();
 
     state.selectedKeys = [
-      // @ts-ignore
       ...matched.filter((r) => r.name !== "index").map((r) => r.path),
-      // @ts-ignore
       router.currentRoute.value?.meta?.activeMenuPath,
     ];
-    // @ts-ignore
     state.openKeys = matched.filter((r) => r.path !== router.currentRoute.value.path).map((r) => r.path);
+
+    if (projectSettings.microapp?.apps) {
+      microapp.value = JSON.stringify(
+        projectSettings.microapp?.apps.find((app) => router.currentRoute.value.path.indexOf(`/${app.name}`) === 0),
+      );
+    }
   }
 });
 
@@ -141,6 +183,10 @@ const breadcrumb = computed(() =>
     };
   }),
 );
+
+const microappHandleChange = (app) => {
+  router.push(JSON.parse(app)?.homePath);
+};
 </script>
 
 <style scoped>

@@ -70,6 +70,43 @@ program
   });
 
 program
+  .command("dev:microapp")
+  .description("在当前目录下启动 Vite 开发服务器，并打开对应的微应用")
+  // eslint-disable-next-line no-unused-vars
+  .action((...args) => {
+    require("./utils/select-microapp")(({ app: { name, version } }) => {
+      handleAction(...["serve", { m: `dev:microapp›${name}›${version}` }, {}]);
+    }, false);
+  });
+
+program
+  .command("build:microapp")
+  .description("构建微前端应用生产版本")
+  .option("--name", `[string] set microapp name`)
+  .option("--version", `[string] set microapp version`)
+  .action((...args) => {
+    const argsObj = Object(...[...args]);
+    const handleActionFn = (name, version) => {
+      handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `dist/${name}/${version}` }, {}]);
+      // handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `public/${name}/${version}` }, {}]);
+    };
+
+    if (argsObj?.name && argsObj?.version) {
+      handleActionFn(argsObj?.name, argsObj?.version);
+    } else {
+      require("./utils/select-microapp")(({ app: { name, version } }) => {
+        // const argsObj = Object(...[...args]);
+        // const mode = argsObj?.app ? { m: `microapp:${argsObj?.app}` } : {};
+        if (name === "main") {
+          handleAction(...["build", ...args]);
+        } else {
+          handleActionFn(name, version);
+        }
+      });
+    }
+  });
+
+program
   .command("optimize")
   .description("预构建依赖")
   .option("--force", `[boolean] force the optimizer to ignore the cache and re-bundle`)
