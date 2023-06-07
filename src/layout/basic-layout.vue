@@ -6,7 +6,7 @@
     v-model:selectedKeys="state.selectedKeys"
     :breadcrumb="{ routes: userSettings?.breadcrumb?.display === true ? breadcrumb : null }"
   >
-    <template v-if="projectSettings.microapp?.apps" #menuHeaderRender>
+    <template #menuHeaderRender>
       <RouterLink to="/">
         <img src="@/assets/images/logo.png" />
         <h1 class="logo-title">{{ appTitle }}</h1>
@@ -14,7 +14,12 @@
     </template>
 
     <template #menuExtraRender="{ collapsed }">
-      <a-select v-if="!collapsed" v-model:value="microapp" style="width: 100%" @change="microappHandleChange">
+      <a-select
+        v-if="!collapsed && projectSettings.microapp?.apps"
+        v-model:value="microapp"
+        style="width: 100%"
+        @change="microappHandleChange"
+      >
         <a-select-option
           :disabled="isDevMicroappMode && microappName !== item.name"
           :value="JSON.stringify(item)"
