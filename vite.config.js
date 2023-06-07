@@ -95,6 +95,7 @@ export default async ({ command, mode }) => {
         "pinia",
         "nprogress",
         "jsencrypt",
+        "darkreader",
       ],
     },
     css: {
