@@ -12,5 +12,5 @@ appRoutes.forEach((r) => {
   window.CASTLE?.loadedMicroappRoutes.push(r);
 });
 
-// 发射完成信号
-window.CASTLE?._container?._vnode?.appContext?.provides.bus.emit("castle-microapp-loaded");
+// 加载完成信号
+window.CASTLE?._container?._vnode?.appContext?.provides?.bus.emit("CASTLE__microappLoaded");

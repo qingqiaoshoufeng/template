@@ -85,7 +85,7 @@ const role = computed(() => userStore.role);
 const microapp = ref(null);
 const microappLoadedLoading = ref(false);
 const microappName = import.meta.env.VITE_APP_MICROAPP_NAME;
-bus.on("castle-microapp-loaded-loading", (v) => (microappLoadedLoading.value = v));
+bus.on("CASTLE__microappLoadedLoading", (v) => (microappLoadedLoading.value = v));
 
 const isEnabledMicroapp = () => {
   return projectSettings.microapp?.apps.filter((i) => {
@@ -131,6 +131,7 @@ const sortAndFilterMenuData = (menuData) => {
 const loading = ref(false);
 
 bus.on("castle-global-loading", (status) => (loading.value = status));
+bus.on("CASTLE__globalLoading", (status) => (loading.value = status));
 
 const state = reactive({
   collapsed: false, // default value
@@ -153,7 +154,7 @@ const layoutConf = reactive({
   ...userSettings?.layout,
 });
 
-bus.on("castle-microapp-loaded", () => {
+bus.on("CASTLE__microappLoaded", () => {
   handleMenuDataFlag.value += 1;
 });
 

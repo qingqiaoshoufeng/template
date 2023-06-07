@@ -22,10 +22,10 @@ export default function setupPermissionGuard(router) {
       if (name && import.meta.env.VITE_APP_MICROAPP_NAME !== name) {
         const loadedMicroapp = window.CASTLE?.loadedMicroapp;
         if (loadedMicroapp.map((i) => i.name).includes(name)) {
-          bus.emit("castle-microapp-loaded-loading", false);
+          bus.emit("CASTLE__microappLoadedLoading", false);
           next();
         } else {
-          bus.emit("castle-microapp-loaded-loading", true);
+          bus.emit("CASTLE__microappLoadedLoading", true);
           const manifest = await (await fetch(`/${name}/${version}/manifest.json`)).json();
           const loadPath = `/${name}/${version}/${manifest?.["node_modules/@castle/castle-template/src/utils/microapp-entry.js"]?.file}`;
           await loadScript(loadPath, { type: "module" });
