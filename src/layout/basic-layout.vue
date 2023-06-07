@@ -13,13 +13,8 @@
       </RouterLink>
     </template>
 
-    <template #menuExtraRender="{ collapsed }">
-      <a-select
-        v-if="!collapsed && projectSettings.microapp?.apps"
-        v-model:value="microapp"
-        style="width: 100%"
-        @change="microappHandleChange"
-      >
+    <template v-if="!collapsed && projectSettings.microapp?.apps" #menuExtraRender="{ collapsed }">
+      <a-select v-model:value="microapp" style="width: 100%" @change="microappHandleChange">
         <a-select-option
           :disabled="isDevMicroappMode && microappName !== item.name"
           :value="JSON.stringify(item)"
