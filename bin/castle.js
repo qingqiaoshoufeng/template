@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 const path = require("path");
 const { Command } = require("commander");
+const fs = require("fs");
 
 const program = new Command();
 
@@ -13,6 +14,16 @@ const configPath = path.resolve(__dirname, "../vite.config.js");
 const handleAction = (command, str, { args = [] }) => {
   // console.log(args);
   // console.log(str);
+
+  // 给husky执行文件添加可执行权限
+  const huskyPreCommitPath = path.resolve(process.cwd(), "./.husky/pre-commit");
+  const huskycommitMsgPath = path.resolve(process.cwd(), "./.husky/commit-msg");
+  fs.chmod(huskyPreCommitPath, 0o755, (err) => {
+    if (err) throw err;
+  });
+  fs.chmod(huskycommitMsgPath, 0o755, (err) => {
+    if (err) throw err;
+  });
 
   const strArray = [];
   const keys = Object.keys(str);
