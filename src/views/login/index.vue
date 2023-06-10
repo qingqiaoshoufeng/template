@@ -138,6 +138,13 @@ import { setToken } from "#/utils/auth";
 import userSettings from "@/config/settings.js";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
 
+const formState = reactive({
+  username: "",
+  password: "",
+  verificationCode: "",
+  remember: false,
+});
+
 const loginTypeConfig = () => {
   const modeType = userSettings?.userApiImplement?.modeType;
   if (modeType === "phone") {
@@ -173,7 +180,7 @@ const startCountdown = () => {
       countdown.value.innerText = `发送验证码`;
     }
   }, 1000);
-  userSettings?.userApiImplement?.sendSmsCode();
+  userSettings?.userApiImplement?.sendSmsCode(formState.value);
 };
 
 const showErrInfo = ["development"].includes(import.meta.env.MODE);
@@ -186,13 +193,6 @@ const router = useRouter();
 const appStore = useAppStore();
 const appTitle = computed(() => appStore.title);
 const copyright = computed(() => appStore.copyright);
-
-const formState = reactive({
-  username: "",
-  password: "",
-  verificationCode: "",
-  remember: false,
-});
 
 let loading = ref(false);
 
