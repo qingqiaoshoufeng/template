@@ -17,20 +17,37 @@
             <h1 class="header-title"><span class="login-tip">登录到</span><br />{{ appTitle }}</h1>
             <br />
             <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish">
-              <a-form-item name="username" :rules="[{ required: true, message: '请输入用户名' }]">
-                <a-input placeholder="用户名" size="large" v-model:value="formState.username">
+              <a-form-item
+                name="username"
+                :rules="[{ required: true, message: `请输入${loginTypeConfig().username}` }]"
+              >
+                <a-input :placeholder="loginTypeConfig().username" size="large" v-model:value="formState.username">
                   <template #prefix>
-                    <UserOutlined class="site-form-item-icon" />
+                    <RenderJsxComponents :componentVnode="loginTypeConfig().usernameIcon" />
                   </template>
                 </a-input>
               </a-form-item>
 
-              <a-form-item name="password" :rules="[{ required: true, message: '请输入密码' }]">
-                <a-input-password placeholder="密码" size="large" autoComplete="on" v-model:value="formState.password">
+              <a-form-item
+                name="password"
+                :rules="[{ required: true, message: `请输入${loginTypeConfig().password}` }]"
+              >
+                <component
+                  :is="loginTypeConfig().type"
+                  :placeholder="loginTypeConfig().password"
+                  size="large"
+                  autoComplete="on"
+                  v-model:value="formState.password"
+                >
                   <template #prefix>
-                    <LockOutlined class="site-form-item-icon" />
+                    <RenderJsxComponents :componentVnode="loginTypeConfig().passwordIcon" />
                   </template>
-                </a-input-password>
+                  <template #suffix>
+                    <a-button size="small" @click="startCountdown" :disabled="countdown.disabled">
+                      {{ countdown.innerText }}
+                    </a-button>
+                  </template>
+                </component>
               </a-form-item>
 
               <a-row v-if="getVerificationCodeFn" :gutter="[16, 16]" justify="space-between" align="middle">
@@ -107,14 +124,57 @@
 
 <script setup>
 import { computed, reactive, inject, ref, createVNode, onMounted } from "vue";
-import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import {
+  ExclamationCircleOutlined,
+  UserOutlined,
+  LockOutlined,
+  MobileOutlined,
+  KeyOutlined,
+} from "@ant-design/icons-vue";
 import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
-// @ts-ignore
 import { useAppStore, useUserStore } from "#/store";
 import { setToken } from "#/utils/auth";
 import userSettings from "@/config/settings.js";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
+
+const loginTypeConfig = () => {
+  const modeType = userSettings?.userApiImplement?.modeType;
+  if (modeType === "phone") {
+    return {
+      username: "手机号",
+      password: "验证码",
+      usernameIcon: createVNode(MobileOutlined),
+      passwordIcon: createVNode(KeyOutlined),
+      type: "a-input",
+    };
+  } else {
+    return {
+      username: "用户名",
+      password: "密码",
+      usernameIcon: createVNode(UserOutlined),
+      passwordIcon: createVNode(LockOutlined),
+      type: "a-input-password",
+    };
+  }
+};
+
+const countdown = ref({ disabled: false, innerText: "发送验证码" });
+const startCountdown = () => {
+  let seconds = 60;
+  const countdownFn = setInterval(() => {
+    seconds -= 1;
+    if (seconds > 0) {
+      countdown.value.disabled = true;
+      countdown.value.innerText = `${seconds}秒后重新发送`;
+    } else {
+      clearInterval(countdownFn);
+      countdown.value.disabled = false;
+      countdown.value.innerText = `发送验证码`;
+    }
+  }, 1000);
+  userSettings?.userApiImplement?.sendSmsCode();
+};
 
 const showErrInfo = ["development"].includes(import.meta.env.MODE);
 const isDevelopmentEnv = showErrInfo;
