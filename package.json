@@ -1,6 +1,6 @@
 {
   "name": "@castle/castle-template",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "bin": {
     "castle": "bin/castle.js"
   },

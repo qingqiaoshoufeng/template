@@ -43,7 +43,11 @@
                     <component :is="loginTypeConfig().passwordIcon" />
                   </template>
                   <template v-if="userSettings?.userApiImplement?.modeType === 'phone'" #suffix>
-                    <a-button size="small" @click="startCountdown" :disabled="countdown.disabled">
+                    <a-button
+                      size="small"
+                      @click="startCountdown"
+                      :disabled="countdown.disabled || !Boolean(formState.username) || requiredOtherFormItems"
+                    >
                       {{ countdown.innerText }}
                     </a-button>
                   </template>
@@ -152,6 +156,12 @@ const formState = reactive({
   remember: false,
 });
 
+const requiredOtherFormItems = computed(() => {
+  const allName = (userSettings?.userApiImplement?.otherFormItems ?? []).map((i) => i.name);
+  const allValueBoolean = allName.map((name) => Boolean(formState[name]));
+  return allValueBoolean.includes(false);
+});
+
 const loginTypeConfig = () => {
   const modeType = userSettings?.userApiImplement?.modeType;
   if (modeType === "phone") {
@@ -187,7 +197,7 @@ const startCountdown = () => {
       countdown.value.innerText = `发送验证码`;
     }
   }, 1000);
-  userSettings?.userApiImplement?.sendSmsCode(formState.value);
+  userSettings?.userApiImplement?.sendSmsCode(formState);
 };
 
 const showErrInfo = ["development"].includes(import.meta.env.MODE);
