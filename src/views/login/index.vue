@@ -23,7 +23,7 @@
               >
                 <a-input :placeholder="loginTypeConfig().username" size="large" v-model:value="formState.username">
                   <template #prefix>
-                    <RenderJsxComponents :componentVnode="loginTypeConfig().usernameIcon" />
+                    <component :is="loginTypeConfig().usernameIcon" />
                   </template>
                 </a-input>
               </a-form-item>
@@ -40,14 +40,27 @@
                   v-model:value="formState.password"
                 >
                   <template #prefix>
-                    <RenderJsxComponents :componentVnode="loginTypeConfig().passwordIcon" />
+                    <component :is="loginTypeConfig().passwordIcon" />
                   </template>
-                  <template #suffix>
+                  <template v-if="userSettings?.userApiImplement?.modeType === 'phone'" #suffix>
                     <a-button size="small" @click="startCountdown" :disabled="countdown.disabled">
                       {{ countdown.innerText }}
                     </a-button>
                   </template>
                 </component>
+              </a-form-item>
+
+              <a-form-item
+                v-for="item in userSettings?.userApiImplement?.otherFormItems ?? []"
+                :key="item.name"
+                :name="item.name"
+                :rules="[{ required: true, message: `请输入${item.label}` }]"
+              >
+                <a-input :placeholder="item.label" size="large" v-model:value="formState[item.name]">
+                  <template v-if="item.icon" #prefix>
+                    <component :is="item.icon" />
+                  </template>
+                </a-input>
               </a-form-item>
 
               <a-row v-if="getVerificationCodeFn" :gutter="[16, 16]" justify="space-between" align="middle">
@@ -124,13 +137,7 @@
 
 <script setup>
 import { computed, reactive, inject, ref, createVNode, onMounted } from "vue";
-import {
-  ExclamationCircleOutlined,
-  UserOutlined,
-  LockOutlined,
-  MobileOutlined,
-  KeyOutlined,
-} from "@ant-design/icons-vue";
+import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 import { useAppStore, useUserStore } from "#/store";
@@ -151,16 +158,16 @@ const loginTypeConfig = () => {
     return {
       username: "手机号",
       password: "验证码",
-      usernameIcon: createVNode(MobileOutlined),
-      passwordIcon: createVNode(KeyOutlined),
+      usernameIcon: "MobileOutlined",
+      passwordIcon: "KeyOutlined",
       type: "a-input",
     };
   } else {
     return {
       username: "用户名",
       password: "密码",
-      usernameIcon: createVNode(UserOutlined),
-      passwordIcon: createVNode(LockOutlined),
+      usernameIcon: "UserOutlined",
+      passwordIcon: "LockOutlined",
       type: "a-input-password",
     };
   }
