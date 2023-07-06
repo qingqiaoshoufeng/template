@@ -13,7 +13,7 @@
       </RouterLink>
     </template>
 
-    <template v-if="!collapsed && projectSettings.microapp?.apps" #menuExtraRender="{ collapsed }">
+    <template v-if="!state.collapsed && projectSettings.microapp?.apps && isDevMicroappMode" #menuExtraRender>
       <a-select v-model:value="microapp" style="width: 100%" @change="microappHandleChange">
         <a-select-option
           :disabled="isDevMicroappMode && microappName !== item.name"
@@ -38,7 +38,11 @@
       <a-space :size="10">
         <RenderJsxComponents v-for="c in userSettings?.userNavigationComponents" :key="c" :componentVnode="c" />
         <template v-if="userSettings?.darkness?.showSwitch">
-          <a-divider type="vertical" style="background-color: #6f8edd" />
+          <a-divider
+            type="vertical"
+            v-if="userSettings?.userNavigationComponents?.length"
+            style="background-color: #6f8edd"
+          />
           <darkness-mode-switch />
         </template>
         <avatar-dropdown :menu="state.showMenu" :current-user="state.currentUser" />
@@ -110,19 +114,19 @@ const menuData = computed(() => {
 });
 
 const permissionStore = usePermissionStore();
-const sortAndFilterMenuData = (menuData) => {
+const FilterAndSortMenuData = (menuData) => {
   const handledMenuData = menuData
-    .sort((a, b) => {
-      return typeof a?.meta?.sort === "number" && typeof b?.meta?.sort === "number" ? a?.meta?.sort - b?.meta?.sort : 0;
-    })
     .filter((i) => {
       const requiresAuth = i?.meta?.requiresAuth ?? true;
       const permissions = i?.meta?.permissions ?? [];
       return requiresAuth ? permissionStore.checkPermission(permissions) : true;
+    })
+    .sort((a, b) => {
+      return typeof a?.meta?.sort === "number" && typeof b?.meta?.sort === "number" ? a?.meta?.sort - b?.meta?.sort : 0;
     });
 
   handledMenuData.forEach((element) => {
-    if (element?.children) element.children = sortAndFilterMenuData(element?.children);
+    if (element?.children) element.children = FilterAndSortMenuData(element?.children);
   });
 
   return handledMenuData;
@@ -150,7 +154,7 @@ const layoutConf = reactive({
   headerTheme: "dark",
   layout: "mix",
   splitMenus: false,
-  menuData: computed(() => sortAndFilterMenuData(menuData.value)),
+  menuData: computed(() => FilterAndSortMenuData(menuData.value)),
   ...userSettings?.layout,
 });
 
