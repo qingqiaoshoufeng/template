@@ -58,7 +58,9 @@
         <MultiTab />
       </template>
       <a-spin :spinning="loading">
-        <PageLayout />
+        <WaterMark :content="watermarkContent">
+          <PageLayout />
+        </WaterMark>
       </a-spin>
     </PageContainer>
   </pro-layout>
@@ -66,6 +68,7 @@
 
 <script setup>
 import { reactive, computed, watchEffect, ref, inject } from "vue";
+import { WaterMark } from "@castle/pro-layout";
 import { useRouter } from "vue-router";
 import PageLayout from "./page-layout.vue";
 import { getMenuData, clearMenuItem } from "@castle/pro-layout";
@@ -85,6 +88,8 @@ const isDevMicroappMode = import.meta.env.MODE.indexOf("dev:microapp›") === 0;
 
 const name = computed(() => userStore.name);
 const role = computed(() => userStore.role);
+
+const watermarkContent = computed(() => appStore.watermarkContent(userStore));
 
 const microapp = ref(null);
 const microappLoadedLoading = ref(false);

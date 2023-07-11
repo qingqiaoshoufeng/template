@@ -6,6 +6,7 @@ import registerIcons from "#/utils/register-icons.js";
 import provideUtils from "#/utils/provide-utils.js";
 import PermissionDirective from "#/directive/permission";
 import userSettings from "@/config/settings.js";
+import PageLayout from "#/components/layout/page-layout.js";
 
 import "@castle/pro-layout/dist/style.css";
 import "@castle/ant-design-vue/dist/antd.variable.less";
@@ -28,6 +29,7 @@ app.use(Antd);
 app.use(ProLayout);
 app.use(PageContainer);
 app.use(PermissionDirective);
+app.use(PageLayout);
 
 registerIcons(app);
 provideUtils(app);

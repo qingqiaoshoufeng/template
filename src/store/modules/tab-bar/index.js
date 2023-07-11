@@ -33,9 +33,16 @@ const useAppStore = defineStore("tabBar", {
   },
 
   actions: {
-    updateTabList(route) {
-      this.tagList.push(formatTag(route));
-      route.meta?.keepAlive && this.cacheTabList.add(route.meta?.keepAlive);
+    updateTabList(router) {
+      this.tagList.push(formatTag(router));
+      if (router.matched && Array.isArray(router.matched)) {
+        const matched = router.matched.concat();
+        matched.forEach((e) => {
+          if (e.path !== "/" && e.meta?.keepAlive) {
+            this.cacheTabList.add(e.meta?.keepAlive);
+          }
+        });
+      }
     },
     deleteTag(idx, tag) {
       this.tagList.splice(idx, 1);
