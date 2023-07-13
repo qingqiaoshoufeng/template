@@ -18,7 +18,8 @@ export default {
   },
   data() {
     return {
-      showErrInfo: ["development", "test"].includes(import.meta.env.MODE),
+      showErrInfo:
+        ["development", "test"].includes(import.meta.env.MODE) || import.meta.env.MODE.indexOf("dev:microapp›") === 0,
     };
   },
   props: {
