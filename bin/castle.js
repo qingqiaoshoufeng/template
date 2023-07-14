@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const path = require("path");
+const { pathToFileURL } = require("url");
 const { Command } = require("commander");
 const fs = require("fs");
 
@@ -93,23 +94,35 @@ program
 program
   .command("build:microapp")
   .description("构建微前端应用生产版本")
-  .option("--name", `[string] set microapp name`)
-  .option("--version", `[string] set microapp version`)
-  .action((...args) => {
+  .option("--microappName <name>", `[string] set microapp name`)
+  .action(async (...args) => {
     const argsObj = Object(...[...args]);
     const handleActionFn = (name, version) => {
       handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `dist/${name}/${version}` }, {}]);
       // handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `public/${name}/${version}` }, {}]);
     };
 
-    if (argsObj?.name && argsObj?.version) {
-      handleActionFn(argsObj?.name, argsObj?.version);
+    if (argsObj?.microappName) {
+      if (argsObj?.microappName === "main") {
+        handleAction(...["build", {}, {}]);
+      } else {
+        const settings = await import(
+          pathToFileURL(`${path.resolve(process.cwd(), "./src/config/project-settings.mjs")}`)
+        );
+
+        const {
+          default: { microapp },
+        } = settings;
+
+        const app = microapp.apps.find((app) => app.name === argsObj?.microappName);
+        handleActionFn(app?.name, app?.version);
+      }
     } else {
       require("./utils/select-microapp")(({ app: { name, version } }) => {
         // const argsObj = Object(...[...args]);
         // const mode = argsObj?.app ? { m: `microapp:${argsObj?.app}` } : {};
         if (name === "main") {
-          handleAction(...["build", ...args]);
+          handleAction(...["build", {}, {}]);
         } else {
           handleActionFn(name, version);
         }

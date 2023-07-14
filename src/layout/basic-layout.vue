@@ -13,7 +13,10 @@
       </RouterLink>
     </template>
 
-    <template v-if="!state.collapsed && projectSettings.microapp?.apps && isDevMicroappMode" #menuExtraRender>
+    <template
+      v-if="!state.collapsed && projectSettings.microapp?.apps && (isDevelopment ? isDevMicroappMode : true)"
+      #menuExtraRender
+    >
       <a-select v-model:value="microapp" style="width: 100%" @change="microappHandleChange">
         <a-select-option
           :disabled="isDevMicroappMode && microappName !== item.name"
@@ -85,6 +88,7 @@ const appStore = useAppStore();
 const userStore = useUserStore();
 const appTitle = computed(() => appStore.title);
 const isDevMicroappMode = import.meta.env.MODE.indexOf("dev:microapp›") === 0;
+const isDevelopment = ["development"].includes(import.meta.env.MODE);
 
 const name = computed(() => userStore.name);
 const role = computed(() => userStore.role);
