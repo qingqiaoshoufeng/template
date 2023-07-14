@@ -18,11 +18,11 @@ const handleAction = (command, str, { args = [] }) => {
 
   // 给husky执行文件添加可执行权限
   const huskyPreCommitPath = path.resolve(process.cwd(), "./.husky/pre-commit");
-  const huskycommitMsgPath = path.resolve(process.cwd(), "./.husky/commit-msg");
+  const huskyCommitMsgPath = path.resolve(process.cwd(), "./.husky/commit-msg");
   fs.chmod(huskyPreCommitPath, 0o755, (err) => {
     if (err) throw err;
   });
-  fs.chmod(huskycommitMsgPath, 0o755, (err) => {
+  fs.chmod(huskyCommitMsgPath, 0o755, (err) => {
     if (err) throw err;
   });
 

@@ -1,10 +1,8 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <transition name="fade" mode="out-in" appear>
-      <keep-alive :include="cacheList" :max="10">
-        <component :is="Component" :key="route.fullPath" />
-      </keep-alive>
-    </transition>
+    <keep-alive :include="cacheList" :max="10">
+      <component :is="Component" :key="route.fullPath" />
+    </keep-alive>
   </router-view>
 </template>
 
