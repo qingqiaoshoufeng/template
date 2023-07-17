@@ -59,7 +59,9 @@ export default async ({ command, mode }) => {
               .replace(
                 "const Static = Symbol((process.env.NODE_ENV !== 'production') ? 'Static' : undefined);",
                 "const Static = window.CASTLE?.nodeTypeSymbol?.Static",
-              );
+              )
+              // 修复子应用设置空ref报错的问题
+              .replace("refs[ref] = value;", "if(refs && refs[ref]) refs[ref] = value;");
             return isMicroappMode ? replaceSource : source;
           },
         },
