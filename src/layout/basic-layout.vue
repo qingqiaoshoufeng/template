@@ -163,7 +163,9 @@ const layoutConf = reactive({
   headerTheme: "dark",
   layout: "mix",
   splitMenus: false,
-  menuData: computed(() => FilterAndSortMenuData(menuData.value)),
+  menuData: computed(() => {
+    return handleMenuDataFlag.value ? FilterAndSortMenuData(menuData.value) : FilterAndSortMenuData(menuData.value)
+  }),
   ...userSettings?.layout,
 });
 

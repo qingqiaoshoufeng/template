@@ -5,7 +5,6 @@ import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import Pages from "vite-plugin-pages";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
-import filterReplace from "vite-plugin-filter-replace";
 import { merge } from "lodash";
 // import Components from "unplugin-vue-components/vite";
 // import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
@@ -35,37 +34,10 @@ export default async ({ command, mode }) => {
       vueJsx(),
       Pages({
         routeStyle: "next",
-        exclude: ["**/*/_*.@(vue|js|jsx)"],
+        exclude: ["**/*/_*.@(vue|js|jsx)"], // TODO: 需要处理主应用构建时候，排除掉所有子应用的文件夹
         dirs: isMicroappMode ? { dir: `src/pages/microapp-${microappName}`, baseRoute: microappName } : "src/pages",
       }),
       vueSetupExtend(),
-      filterReplace([
-        {
-          filter: ["node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js"],
-          replace(source) {
-            const replaceSource = source
-              .replace(
-                "const Text = Symbol((process.env.NODE_ENV !== 'production') ? 'Text' : undefined);",
-                "const Text = window.CASTLE?.nodeTypeSymbol?.Text",
-              )
-              .replace(
-                "const Comment = Symbol((process.env.NODE_ENV !== 'production') ? 'Comment' : undefined);",
-                "const Comment = window.CASTLE?.nodeTypeSymbol?.Comment",
-              )
-              .replace(
-                "const Fragment = Symbol((process.env.NODE_ENV !== 'production') ? 'Fragment' : undefined);",
-                "const Fragment = window.CASTLE?.nodeTypeSymbol?.Fragment",
-              )
-              .replace(
-                "const Static = Symbol((process.env.NODE_ENV !== 'production') ? 'Static' : undefined);",
-                "const Static = window.CASTLE?.nodeTypeSymbol?.Static",
-              )
-              // 修复子应用设置空ref报错的问题
-              .replace("refs[ref] = value;", "if(refs && refs[ref]) refs[ref] = value;");
-            return isMicroappMode ? replaceSource : source;
-          },
-        },
-      ]),
       // Components({
       //   resolvers: [AntDesignVueResolver({ importStyle: false })],
       // }),
