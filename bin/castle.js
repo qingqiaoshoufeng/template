@@ -98,13 +98,15 @@ program
   .action(async (...args) => {
     const argsObj = Object(...[...args]);
     const handleActionFn = (name, version) => {
-      handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `dist/${name}/${version}` }, {}]);
+      handleAction(
+        ...["build", { m: `build:microapp›${name}›${version}`, outDir: `dist/mainapp-${name}/${version}` }, {}],
+      );
       // handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `public/${name}/${version}` }, {}]);
     };
 
     if (argsObj?.microappName) {
       if (argsObj?.microappName === "main") {
-        handleAction(...["build", {}, {}]);
+        handleAction(...["build", { m: `build:mainapp›main›latest` }, {}]);
       } else {
         const settings = await import(
           pathToFileURL(`${path.resolve(process.cwd(), "./src/config/project-settings.mjs")}`)
@@ -122,7 +124,7 @@ program
         // const argsObj = Object(...[...args]);
         // const mode = argsObj?.app ? { m: `microapp:${argsObj?.app}` } : {};
         if (name === "main") {
-          handleAction(...["build", {}, {}]);
+          handleAction(...["build", { m: `build:mainapp›main›latest` }, {}]);
         } else {
           handleActionFn(name, version);
         }

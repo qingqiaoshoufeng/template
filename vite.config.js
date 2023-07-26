@@ -17,8 +17,9 @@ export default async ({ command, mode }) => {
   } = settings;
 
   const isMicroappMode = mode.indexOf("microapp›") > -1;
-  const microappName = mode.split("›")?.[1];
-  const microappVersion = mode.split("›")?.[2];
+  const isMainappMode = mode.indexOf("mainapp›") > -1;
+  const appName = mode.split("›")?.[1];
+  const appVersion = mode.split("›")?.[2];
 
   const getRollupOptions = () => ({
     input: path.resolve(process.cwd(), "./node_modules/@castle/castle-template/src/utils/microapp-entry.js"),
@@ -34,20 +35,23 @@ export default async ({ command, mode }) => {
       vueJsx(),
       Pages({
         routeStyle: "next",
-        exclude: ["**/*/_*.@(vue|js|jsx)"], // TODO: 需要处理主应用构建时候，排除掉所有子应用的文件夹
-        dirs: isMicroappMode ? { dir: `src/pages/microapp-${microappName}`, baseRoute: microappName } : "src/pages",
+        exclude: ["**/*/_*.@(vue|js|jsx)"],
+        dirs:
+          isMainappMode || isMicroappMode
+            ? { dir: `src/pages/${isMainappMode ? "mainapp" : `microapp-${appName}`}`, baseRoute: isMainappMode ?  "" : appName }
+            : "src/pages",
       }),
       vueSetupExtend(),
       // Components({
       //   resolvers: [AntDesignVueResolver({ importStyle: false })],
       // }),
     ],
-    base: isMicroappMode && command === "build" ? `/${microappName}/${microappVersion}` : undefined,
+    base: isMicroappMode && command === "build" ? `/${appName}/${appVersion}` : undefined,
     build: {
       rollupOptions: isMicroappMode ? getRollupOptions() : undefined,
       assetsDir: isMicroappMode ? "" : "assets",
       manifest: isMicroappMode,
-      minify: false,
+      minify: true,
     },
     server: server && server({ command, mode, env }),
     resolve: {
