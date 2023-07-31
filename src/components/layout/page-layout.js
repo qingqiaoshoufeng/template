@@ -1,4 +1,4 @@
-import PageLayout from "#/layout/page-layout.vue";
+import PageLayout from "./page-layout.vue";
 
 export default {
   install(app) {
