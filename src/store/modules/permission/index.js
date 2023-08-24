@@ -55,7 +55,7 @@ const usePermissionStore = defineStore("permission", {
         return false;
       }
 
-      const normalArr = [...codes, ...this.$state.permissionCodes];
+      const normalArr = [...codes, ...new Set(this.$state.permissionCodes)];
       const setArr = [...new Set(normalArr)];
 
       return normalArr.length !== setArr.length;

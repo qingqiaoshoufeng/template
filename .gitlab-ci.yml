@@ -1,0 +1,4 @@
+include:
+  - project: 'Castle/gitlab-ci'
+    ref: master
+    file: '.castle-gitlab-ci.yml'
