@@ -12,7 +12,7 @@ const configPath = path.resolve(__dirname, "../vite.config.js");
 
 // program.version(require("../package.json").version).usage("<command> [options] ");
 
-const handleAction = (command, str, { args = [] }) => {
+const handleAction = (command, str, { args = [] }, env = {}) => {
   // console.log(args);
   // console.log(str);
 
@@ -34,7 +34,7 @@ const handleAction = (command, str, { args = [] }) => {
   });
 
   // console.log(["serve", "--config", configPath, ...args, ...strArray]);
-  require("./utils/invoke-vite")([command, "--config", configPath, ...args, ...strArray]);
+  require("./utils/invoke-vite")([command, "--config", configPath, ...args, ...strArray], env);
   // require("./utils/invoke-vite")(["serve", "--config", configPath, "--debug"]);
 };
 
@@ -84,10 +84,25 @@ program
 program
   .command("dev:microapp")
   .description("在当前目录下启动 Vite 开发服务器，并打开对应的微应用")
+  .option("-m, --mode <mode>", `[string] set env mode`)
   // eslint-disable-next-line no-unused-vars
   .action((...args) => {
-    require("./utils/select-microapp")(({ app: { name, version } }) => {
-      handleAction(...["serve", { m: `dev:microapp›${name}›${version}` }, {}]);
+    require("./utils/select-microapp")(({ app: { name, version, homePath } }) => {
+      handleAction(
+        ...[
+          "serve",
+          ...args,
+          {
+            appName: name,
+            appVersion: version,
+            isMicroappMode: true,
+            isMainappMode: false,
+            VITE_APP_MICROAPP_NAME: name,
+            VITE_APP_MICROAPP_HOME_PATH: homePath,
+            VITE_APP_IS_DEV_MICROAPP_MODE: true,
+          },
+        ],
+      );
     }, false);
   });
 
@@ -95,18 +110,33 @@ program
   .command("build:microapp")
   .description("构建微前端应用生产版本")
   .option("--microappName <name>", `[string] set microapp name`)
+  .option("-m, --mode <mode>", `[string] set env mode`)
   .action(async (...args) => {
     const argsObj = Object(...[...args]);
     const handleActionFn = (name, version) => {
       handleAction(
-        ...["build", { m: `build:microapp›${name}›${version}`, outDir: `dist/mainapp-${name}/${version}` }, {}],
+        ...[
+          "build",
+          {
+            outDir: `dist/mainapp-${name}/${version}`,
+            mode: argsObj?.m ?? argsObj?.mode,
+          },
+          {},
+          { appName: name, appVersion: version, isMicroappMode: true, isMainappMode: false },
+        ],
       );
-      // handleAction(...["build", { m: `build:microapp›${name}›${version}`, outDir: `public/${name}/${version}` }, {}]);
     };
 
     if (argsObj?.microappName) {
       if (argsObj?.microappName === "main") {
-        handleAction(...["build", { m: `build:mainapp›main›latest` }, {}]);
+        handleAction(
+          ...[
+            "build",
+            { mode: argsObj?.m ?? argsObj?.mode },
+            {},
+            { appName: "main", appVersion: "latest", isMicroappMode: false, isMainappMode: true },
+          ],
+        );
       } else {
         const settings = await import(
           pathToFileURL(`${path.resolve(process.cwd(), "./src/config/project-settings.mjs")}`)
@@ -120,11 +150,25 @@ program
         handleActionFn(app?.name, app?.version);
       }
     } else {
-      require("./utils/select-microapp")(({ app: { name, version } }) => {
+      require("./utils/select-microapp")(({ app: { name, version, homePath } }) => {
         // const argsObj = Object(...[...args]);
         // const mode = argsObj?.app ? { m: `microapp:${argsObj?.app}` } : {};
         if (name === "main") {
-          handleAction(...["build", { m: `build:mainapp›main›latest` }, {}]);
+          handleAction(
+            ...[
+              "build",
+              { mode: argsObj?.m ?? argsObj?.mode },
+              {},
+              {
+                appName: "main",
+                appVersion: "latest",
+                isMicroappMode: false,
+                isMainappMode: true,
+                VITE_APP_MICROAPP_NAME: name,
+                VITE_APP_MICROAPP_HOME_PATH: homePath,
+              },
+            ],
+          );
         } else {
           handleActionFn(name, version);
         }

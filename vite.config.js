@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { defineConfig, loadEnv } from "vite";
@@ -16,18 +17,19 @@ export default async ({ command, mode }) => {
     default: { server, vite },
   } = settings;
 
-  const isMicroappMode = mode.indexOf("microapp›") > -1;
-  const isMainappMode = mode.indexOf("mainapp›") > -1;
-  const appName = mode.split("›")?.[1];
-  const appVersion = mode.split("›")?.[2];
-
-  const getRollupOptions = () => ({
-    input: path.resolve(process.cwd(), "./node_modules/@castle/castle-template/src/utils/microapp-entry.js"),
-  });
+  // console.log(mode);
 
   // 根据当前工作目录中的 `mode` 加载 .env 文件
   // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
   const env = loadEnv(mode, process.cwd(), "");
+
+  const { isMicroappMode: isMicroapp, isMainappMode: isMainapp, appName, appVersion } = env;
+  const isMicroappMode = isMicroapp === "true";
+  const isMainappMode = isMainapp === "true";
+
+  const getRollupOptions = () => ({
+    input: path.resolve(process.cwd(), "./node_modules/@castle/castle-template/src/utils/microapp-entry.js"),
+  });
 
   const defaultConfig = defineConfig({
     plugins: [
@@ -38,7 +40,10 @@ export default async ({ command, mode }) => {
         exclude: ["**/*/_*.@(vue|js|jsx)"],
         dirs:
           isMainappMode || isMicroappMode
-            ? { dir: `src/pages/${isMainappMode ? "mainapp" : `microapp-${appName}`}`, baseRoute: isMainappMode ?  "" : appName }
+            ? {
+                dir: `src/pages/${isMainappMode ? "mainapp" : `microapp-${appName}`}`,
+                baseRoute: isMainappMode ? "" : appName,
+              }
             : "src/pages",
       }),
       vueSetupExtend(),

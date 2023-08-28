@@ -10,6 +10,7 @@
 
 <script>
 import { Button as AButton, BadgeRibbon as ABadgeRibbon } from "@castle/ant-design-vue";
+const isDevMicroappMode = import.meta.env.VITE_APP_IS_DEV_MICROAPP_MODE === "true";
 export default {
   name: "RequestErrorInfo",
   components: {
@@ -18,8 +19,7 @@ export default {
   },
   data() {
     return {
-      showErrInfo:
-        ["development", "test"].includes(import.meta.env.MODE) || import.meta.env.MODE.indexOf("dev:microapp›") === 0,
+      showErrInfo: ["development", "test"].includes(import.meta.env.MODE) || isDevMicroappMode,
     };
   },
   props: {

@@ -8,7 +8,7 @@ import "nprogress/nprogress.css";
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
 
-const isDevMicroappMode = import.meta.env.MODE.indexOf("dev:microapp›") === 0;
+const isDevMicroappMode = import.meta.env.VITE_APP_IS_DEV_MICROAPP_MODE === "true";
 const microappHomePath = import.meta.env.VITE_APP_MICROAPP_HOME_PATH;
 const getHomePath = () => {
   return isDevMicroappMode ? microappHomePath : userSettings.homePath;

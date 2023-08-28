@@ -31,8 +31,8 @@ export default function setupUserLoginInfoGuard(router) {
       const toRouter = to.matched[to.matched.length - 1];
       const hasPermissions = Boolean(toRouter?.meta?.permissions);
       const requiresAuth = Boolean(toRouter?.meta?.requiresAuth ?? true);
-      // 没有登陆的情况下，如果当前页面在登陆页面或者当前页面不需要权限
-      if (toRouter.name === "login" || !requiresAuth) {
+      // 没有登陆的情况下，如果当前页面在登陆页面或者当前业务页面不需要权限
+      if (toRouter.name === "login" || (!["Result404", "Result403"].includes(toRouter.name) && !requiresAuth)) {
         if (!hasPermissions && !requiresAuth) {
           console.warn(`[Castle] 页面 ${toRouter.name} 路由信息里面 meta -> permissions 未配置`);
         }

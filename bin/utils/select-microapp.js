@@ -28,8 +28,6 @@ async function getMicroAppChoice(cb, hasMainapp = true) {
   ];
 
   inquirer.prompt(prompts).then((app) => {
-    process.env.VITE_APP_MICROAPP_NAME = app?.app?.name;
-    process.env.VITE_APP_MICROAPP_HOME_PATH = app?.app?.homePath;
     cb(app);
   });
 }

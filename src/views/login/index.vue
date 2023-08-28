@@ -200,8 +200,9 @@ const startCountdown = () => {
   userSettings?.userApiImplement?.sendSmsCode(formState);
 };
 
+const isDevMicroappMode = import.meta.env.VITE_APP_IS_DEV_MICROAPP_MODE === "true";
 const showErrInfo =
-  ["development"].includes(import.meta.env.MODE) || import.meta.env.MODE.indexOf("dev:microapp›") === 0;
+  ["development"].includes(import.meta.env.MODE) || isDevMicroappMode;
 const isDevelopmentEnv = showErrInfo;
 
 const encrypt = inject("encrypt");

@@ -1,10 +1,23 @@
 import projectSettings from "@/config/project-settings.mjs";
 import { loadScript } from "#/utils/load-script";
 import { bus } from "#/utils/event-bus";
+import { isLogin } from "#/utils/auth";
 
 export default function setupPermissionGuard(router) {
   router.beforeEach(async (to, from, next) => {
+    const isDevMicroappMode = import.meta.env.VITE_APP_IS_DEV_MICROAPP_MODE === "true";
+    const microappName = import.meta.env.VITE_APP_MICROAPP_NAME;
     const apps = projectSettings?.microapp?.apps;
+    if (isDevMicroappMode) {
+      const microapp = apps.find((i) => i.name === microappName);
+      if (isLogin()) {
+        to.path.indexOf(microapp.name) === -1 || to.path === microapp.name ? next(microapp.homePath) : next();
+      } else {
+        next();
+      }
+      return;
+    }
+
     if (apps) {
       let microapp = {};
       for (const app of apps) {
@@ -20,7 +33,7 @@ export default function setupPermissionGuard(router) {
 
       const { name, version, homePath, deployBasePath = "" } = microapp;
       const finallyVersion = window?.CASTLE?.microapp?.[name]?.version ?? version;
-      if (name && import.meta.env.VITE_APP_MICROAPP_NAME !== name) {
+      if (name && microappName !== name) {
         const loadedMicroapp = window.CASTLE?.loadedMicroapp;
         if (loadedMicroapp.map((i) => i.name).includes(name)) {
           bus.emit("CASTLE__microappLoadedLoading", false);

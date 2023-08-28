@@ -87,7 +87,7 @@ const bus = inject("bus");
 const appStore = useAppStore();
 const userStore = useUserStore();
 const appTitle = computed(() => appStore.title);
-const isDevMicroappMode = import.meta.env.MODE.indexOf("dev:microapp›") === 0;
+const isDevMicroappMode = import.meta.env.VITE_APP_IS_DEV_MICROAPP_MODE === "true";
 const isDevelopment = ["development"].includes(import.meta.env.MODE);
 
 const name = computed(() => userStore.name);
