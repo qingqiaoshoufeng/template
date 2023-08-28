@@ -4,7 +4,11 @@ function invokeVite(args, env) {
   const vitePath = require.resolve(".bin/vite");
 
   // console.log(args);
-  const childProcess = spawn(vitePath, args, { stdio: "inherit", shell: true, env });
+  const childProcess = spawn(
+    process.platform === "win32" ? vitePath : process.execPath,
+    process.platform === "win32" ? args : [vitePath, ...args],
+    { stdio: "inherit", shell: true, env },
+  );
 
   // console.log(env);
 
