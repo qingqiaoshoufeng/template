@@ -1,6 +1,6 @@
 {
   "name": "@castle/castle-template",
-  "version": "2.0.30",
+  "version": "2.1.0",
   "bin": {
     "castle": "bin/castle.js"
   },
@@ -48,6 +48,7 @@
     "typescript": "^4.9.3",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^4.4.2",
+    "vite-plugin-cdn-import": "^0.3.5",
     "vite-plugin-pages": "^0.26.0",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vitest": "^0.21.0",

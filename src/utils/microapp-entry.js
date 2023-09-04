@@ -1,12 +1,13 @@
 import appRoutes from "~pages";
-import { ssrUtils } from "vue";
+// import { ssrUtils } from "vue";
+import "#/utils/request-interceptor";
 
 window.CASTLE = window.CASTLE || {};
 
 // 设置当前的渲染实例
-ssrUtils.setCurrentRenderingInstance(
-  window.CASTLE?.latestComponentInternalInstance || { ...window.CASTLE?._container?._vnode, refs: {}, setupState: {} },
-);
+// ssrUtils.setCurrentRenderingInstance(
+//   window.CASTLE__AppInstance || { ...window.CASTLE?._container?._vnode, refs: {}, setupState: {} },
+// );
 
 // 注册路由
 appRoutes.forEach((r) => {

@@ -40,9 +40,11 @@ if (typeof userSettings?.lifecycle?.mounted === "function") {
   userSettings?.lifecycle?.mounted(app);
 }
 
+// 微前端全局变量
 window.CASTLE = app;
 window.CASTLE.loadedMicroapp = [];
 window.CASTLE.loadedMicroappRoutes = [];
 window.CASTLE.nodeTypeSymbol = { Text, Comment, Fragment, Static };
+window.CASTLE.baseUrl = import.meta.env?.BASE_URL;
 
 export default app;

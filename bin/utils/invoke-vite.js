@@ -1,6 +1,8 @@
 const { spawn } = require("child_process");
+const syncFiles = require("./sync-files.js");
 
 function invokeVite(args, env) {
+  syncFiles();
   const vitePath = require.resolve(".bin/vite");
 
   // console.log(args);

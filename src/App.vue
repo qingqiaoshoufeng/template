@@ -75,6 +75,8 @@ if (
 ) {
   bus.emit("CASTLE__changeDarknessMode", false);
 }
+
+// window.CASTLE__AppInstance = getCurrentInstance();
 </script>
 
 <template>

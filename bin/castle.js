@@ -29,8 +29,10 @@ const handleAction = (command, str, { args = [] }, env = {}) => {
   const strArray = [];
   const keys = Object.keys(str);
   keys.forEach((key) => {
-    strArray.push(`${key.length > 1 ? "--" : "-"}${key}`);
-    if (typeof str[key] !== "boolean") strArray.push(str[key]);
+    if (str[key]) {
+      strArray.push(`${key.length > 1 ? "--" : "-"}${key}`);
+      if (typeof str[key] !== "boolean") strArray.push(str[key]);
+    }
   });
 
   // console.log(["serve", "--config", configPath, ...args, ...strArray]);
@@ -61,6 +63,7 @@ program
 program
   .command("build")
   .description("构建生产版本")
+  .option("--base <path>", `[string] public base path (default: /)`)
   .option("-m, --mode <mode>", `[string] set env mode`)
   .option("--target <target>", `[string] transpile target (default: 'modules')`)
   .option("--outDir <dir>", `[string] output directory (default: dist)`)
@@ -111,6 +114,7 @@ program
   .description("构建微前端应用生产版本")
   .option("--microappName <name>", `[string] set microapp name`)
   .option("-m, --mode <mode>", `[string] set env mode`)
+  .option("--base <path>", `[string] public base path (default: /)`)
   .action(async (...args) => {
     const argsObj = Object(...[...args]);
     const handleActionFn = (name, version) => {
@@ -118,7 +122,7 @@ program
         ...[
           "build",
           {
-            outDir: `dist/mainapp-${name}/${version}`,
+            outDir: `dist/microapp-${name}/${version}`,
             mode: argsObj?.m ?? argsObj?.mode,
           },
           {},
@@ -132,7 +136,7 @@ program
         handleAction(
           ...[
             "build",
-            { mode: argsObj?.m ?? argsObj?.mode },
+            { mode: argsObj?.m ?? argsObj?.mode, base: argsObj?.base },
             {},
             { appName: "main", appVersion: "latest", isMicroappMode: false, isMainappMode: true },
           ],
@@ -157,7 +161,7 @@ program
           handleAction(
             ...[
               "build",
-              { mode: argsObj?.m ?? argsObj?.mode },
+              { mode: argsObj?.m ?? argsObj?.mode, base: argsObj?.base },
               {},
               {
                 appName: "main",

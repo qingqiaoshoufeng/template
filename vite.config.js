@@ -7,6 +7,7 @@ import vueJsx from "@vitejs/plugin-vue-jsx";
 import Pages from "vite-plugin-pages";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import { merge } from "lodash";
+import importToCDN from "vite-plugin-cdn-import";
 // import Components from "unplugin-vue-components/vite";
 // import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
@@ -14,10 +15,8 @@ import { merge } from "lodash";
 export default async ({ command, mode }) => {
   const settings = await import(pathToFileURL(`${path.resolve(process.cwd(), "./src/config/project-settings.mjs")}`));
   const {
-    default: { server, vite },
+    default: { server, vite, microapp },
   } = settings;
-
-  // console.log(mode);
 
   // 根据当前工作目录中的 `mode` 加载 .env 文件
   // 设置第三个参数为 '' 来加载所有环境变量，而不管是否有 `VITE_` 前缀。
@@ -47,11 +46,29 @@ export default async ({ command, mode }) => {
             : "src/pages",
       }),
       vueSetupExtend(),
+      importToCDN({
+        prodUrl: `${microapp?.baseUrl || ""}/cdn/{path}`,
+        modules: [
+          {
+            name: "vue",
+            var: "Vue",
+            path: "vue.global@3.2.47.min.js",
+          },
+          {
+            name: "vue-demi",
+            var: "VueDemi",
+            path: "vue-demi@0.14.5.min.js",
+          },
+        ],
+      }),
       // Components({
       //   resolvers: [AntDesignVueResolver({ importStyle: false })],
       // }),
     ],
-    base: isMicroappMode && command === "build" ? `/${appName}/${appVersion}` : undefined,
+    base:
+      isMicroappMode && command === "build"
+        ? `${microapp?.baseUrl || ""}/microapp-${appName}/${appVersion}`
+        : microapp?.baseUrl,
     build: {
       rollupOptions: isMicroappMode ? getRollupOptions() : undefined,
       assetsDir: isMicroappMode ? "" : "assets",
