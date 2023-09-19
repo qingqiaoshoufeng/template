@@ -89,8 +89,9 @@
                     <a-form-item>
                       <img
                         v-if="verificationCodeImgSrc"
-                        style="height: 40px; float: right"
+                        style="height: 40px; max-width: 100%; float: right; cursor: pointer;"
                         :src="verificationCodeImgSrc"
+                        @click="getVerificationCode"
                         alt="code"
                       />
                     </a-form-item>

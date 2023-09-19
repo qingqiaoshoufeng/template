@@ -30,6 +30,8 @@ export default async ({ command, mode }) => {
     input: path.resolve(process.cwd(), "./node_modules/@castle/castle-template/src/utils/microapp-entry.js"),
   });
 
+  const userConfig = vite && vite({ command, mode, env });
+
   const defaultConfig = defineConfig({
     plugins: [
       vue(),
@@ -47,7 +49,7 @@ export default async ({ command, mode }) => {
       }),
       vueSetupExtend(),
       importToCDN({
-        prodUrl: `${microapp?.baseUrl || ""}/cdn/{path}`,
+        prodUrl: `${microapp?.baseUrl || userConfig.base || ""}/cdn/{path}`,
         modules: [
           {
             name: "vue",
@@ -106,8 +108,6 @@ export default async ({ command, mode }) => {
       },
     },
   });
-
-  const userConfig = vite && vite({ command, mode, env });
 
   return merge(defaultConfig, userConfig);
 };
