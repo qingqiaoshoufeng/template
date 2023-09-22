@@ -30,7 +30,7 @@
 <script>
 import { Modal } from "@castle/ant-design-vue";
 import { mapActions } from "pinia";
-import { useUserStore } from "#/store";
+import { useUserStore, usePermissionStore } from "#/store";
 import userSettings from "@/config/settings.js";
 export default {
   name: "AvatarDropdown",
@@ -50,12 +50,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions(useUserStore, ["logout"]),
+    ...mapActions(useUserStore, ["logout", "resetInfo"]),
+    ...mapActions(usePermissionStore, ["resetPermissionData"]),
     handleLogout() {
       Modal.confirm({
         title: "提示",
         content: "你确认登出吗？",
         onOk: () => {
+          this.resetPermissionData();
+          this.resetInfo();
+
           this.logout().then(() => {
             this.$router.push({ name: "login" });
           });

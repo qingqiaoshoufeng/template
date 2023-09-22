@@ -20,7 +20,7 @@ export default function setupUserLoginInfoGuard(router) {
           next({
             name: "login",
             query: {
-              redirect: to.name,
+              redirect: to.name !== "Result404" ? to.name : undefined,
               ...to.query,
             },
           });

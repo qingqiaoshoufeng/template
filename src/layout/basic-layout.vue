@@ -164,7 +164,7 @@ const layoutConf = reactive({
   layout: "mix",
   splitMenus: false,
   menuData: computed(() => {
-    return handleMenuDataFlag.value ? FilterAndSortMenuData(menuData.value) : FilterAndSortMenuData(menuData.value)
+    return handleMenuDataFlag.value ? FilterAndSortMenuData(menuData.value) : FilterAndSortMenuData(menuData.value);
   }),
   ...userSettings?.layout,
 });
@@ -201,7 +201,7 @@ const breadcrumb = computed(() =>
 );
 
 const microappHandleChange = (app) => {
-  router.push(JSON.parse(app)?.homePath);
+  router.push(projectSettings.microapp?.baseUrl ?? "" + JSON.parse(app)?.homePath);
 };
 </script>
 

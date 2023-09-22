@@ -1,13 +1,13 @@
 <template>
-  <router-view v-slot="{ Component, route }">
+  <!-- https://github.com/pure-admin/vue-pure-admin/issues/67#issuecomment-1396663541 -->
+  <router-view v-slot="{ Component }">
     <keep-alive :include="cacheList" :max="10">
-      <KeepAliveComponent :component="Component" :key="route.fullPath" />
+      <component :is="Component" :key="undefined" />
     </keep-alive>
   </router-view>
 </template>
 
 <script setup>
-import KeepAliveComponent from "#/components/layout/keep-alive-component.vue"
 import { computed } from "vue";
 // @ts-ignore
 import { useTabBarStore } from "#/store";
