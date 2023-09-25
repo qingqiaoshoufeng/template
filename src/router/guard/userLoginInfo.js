@@ -2,6 +2,10 @@ import { useUserStore } from "#/store";
 import { isLogin } from "#/utils/auth";
 import NProgress from "nprogress";
 
+const isErrorPage = (name) => {
+  return ["Result404", "Result403"].includes(name);
+};
+
 export default function setupUserLoginInfoGuard(router) {
   router.beforeEach(async (to, from, next) => {
     NProgress.start();
@@ -20,7 +24,7 @@ export default function setupUserLoginInfoGuard(router) {
           next({
             name: "login",
             query: {
-              redirect: to.name !== "Result404" ? to.name : undefined,
+              redirect: !isErrorPage(to.name) ? to.name : undefined,
               ...to.query,
             },
           });
@@ -32,7 +36,7 @@ export default function setupUserLoginInfoGuard(router) {
       const hasPermissions = Boolean(toRouter?.meta?.permissions);
       const requiresAuth = Boolean(toRouter?.meta?.requiresAuth ?? true);
       // 没有登陆的情况下，如果当前页面在登陆页面或者当前业务页面不需要权限
-      if (toRouter.name === "login" || (!["Result404", "Result403"].includes(toRouter.name) && !requiresAuth)) {
+      if (toRouter.name === "login" || (!isErrorPage(toRouter.name) && !requiresAuth)) {
         if (!hasPermissions && !requiresAuth) {
           console.warn(`[Castle] 页面 ${toRouter.name} 路由信息里面 meta -> permissions 未配置`);
         }
@@ -43,7 +47,7 @@ export default function setupUserLoginInfoGuard(router) {
       next({
         name: "login",
         query: {
-          redirect: to.name,
+          redirect: !isErrorPage(to.name) ? to.name : undefined,
           ...to.query,
         },
       });
