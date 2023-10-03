@@ -34,6 +34,7 @@ export default function setupPermissionGuard(router) {
 
       const { name, version, homePath, deployBasePath = projectSettings?.microapp?.baseUrl } = microapp;
       const finallyVersion = window?.CASTLE?.microapp?.[name]?.version ?? version;
+      let currentMicroapp = window?.CASTLE?.currentMicroapp;
       if (name && microappName !== name) {
         const loadedMicroapp = window.CASTLE?.loadedMicroapp;
         if (loadedMicroapp.map((i) => i.name).includes(name)) {
@@ -42,8 +43,9 @@ export default function setupPermissionGuard(router) {
         } else {
           if (typeof userSettings?.lifecycle?.microappBeforeMount === "function") {
             userSettings?.lifecycle?.microappBeforeMount(window.CASTLE, microapp);
-            if (window?.CASTLE){
-              window?.CASTLE?.currentMicroapp = microapp
+            if (window?.CASTLE) {
+              // eslint-disable-next-line no-unused-vars
+              currentMicroapp = microapp;
             }
           }
           bus.emit("CASTLE__microappLoadedLoading", true);
