@@ -202,6 +202,10 @@ const breadcrumb = computed(() =>
 
 const microappHandleChange = (app) => {
   router.push(projectSettings.microapp?.baseUrl ?? "" + JSON.parse(app)?.homePath);
+
+  if (typeof userSettings?.lifecycle?.microappChange === "function") {
+    userSettings?.lifecycle?.microappChange(window.CASTLE, JSON.parse(app));
+  }
 };
 </script>
 

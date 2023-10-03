@@ -2,6 +2,7 @@ import projectSettings from "@/config/project-settings.mjs";
 import { loadScript } from "#/utils/load-script";
 import { bus } from "#/utils/event-bus";
 import { isLogin } from "#/utils/auth";
+import userSettings from "@/config/settings.js";
 
 export default function setupPermissionGuard(router) {
   router.beforeEach(async (to, from, next) => {
@@ -39,6 +40,12 @@ export default function setupPermissionGuard(router) {
           bus.emit("CASTLE__microappLoadedLoading", false);
           next();
         } else {
+          if (typeof userSettings?.lifecycle?.microappBeforeMount === "function") {
+            userSettings?.lifecycle?.microappBeforeMount(window.CASTLE, microapp);
+            if (window?.CASTLE){
+              window?.CASTLE?.currentMicroapp = microapp
+            }
+          }
           bus.emit("CASTLE__microappLoadedLoading", true);
           const manifest = await (
             await fetch(`${deployBasePath}/microapp-${name}/${finallyVersion}/manifest.json`)

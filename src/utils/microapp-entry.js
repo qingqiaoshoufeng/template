@@ -18,6 +18,10 @@ if (typeof userSettings?.lifecycle?.mounted === "function") {
   userSettings?.lifecycle?.mounted(window.CASTLE);
 }
 
+if (typeof userSettings?.lifecycle?.microappMounted === "function") {
+  userSettings?.lifecycle?.microappMounted(window.CASTLE, window?.CASTLE?.currentMicroapp);
+}
+
 // 注册路由
 appRoutes.forEach((r) => {
   window.CASTLE?.config?.globalProperties?.$router.addRoute("index", r);
