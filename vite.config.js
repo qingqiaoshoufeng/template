@@ -49,7 +49,7 @@ export default async ({ command, mode }) => {
       }),
       vueSetupExtend(),
       importToCDN({
-        prodUrl: `${microapp?.baseUrl || userConfig.base || ""}/cdn/{path}`,
+        prodUrl: `${microapp?.baseUrl || userConfig?.base || ""}/cdn/{path}`,
         modules: [
           {
             name: "vue",
