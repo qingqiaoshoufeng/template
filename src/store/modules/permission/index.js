@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 import { useUserStore } from "#/store";
 import { isArray } from "lodash-es";
 const usePermissionStore = defineStore("permission", {

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { NOT_FOUND_ROUTE, FORBIDDEN_ROUTE } from "./routers/modules/base";
 import createRouteGuard from "./guard";
 import appRoutes from "~pages";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 import NProgress from "nprogress"; // progress bar
 import "nprogress/nprogress.css";
 

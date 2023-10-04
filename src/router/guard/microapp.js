@@ -2,7 +2,7 @@ import projectSettings from "@/config/project-settings.mjs";
 import { loadScript } from "#/utils/load-script";
 import { bus } from "#/utils/event-bus";
 import { isLogin } from "#/utils/auth";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 
 export default function setupPermissionGuard(router) {
   router.beforeEach(async (to, from, next) => {

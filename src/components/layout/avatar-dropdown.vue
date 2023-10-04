@@ -31,7 +31,7 @@
 import { Modal } from "@castle/ant-design-vue";
 import { mapActions } from "pinia";
 import { useUserStore, usePermissionStore } from "#/store";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 export default {
   name: "AvatarDropdown",
   props: {

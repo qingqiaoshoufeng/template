@@ -5,7 +5,7 @@ import ProLayout, { PageContainer } from "@castle/pro-layout";
 import registerIcons from "#/utils/register-icons.js";
 import provideUtils from "#/utils/provide-utils.js";
 import PermissionDirective from "#/directive/permission";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 import PageLayout from "#/components/layout/page-layout.js";
 
 import "@castle/pro-layout/dist/style.css";

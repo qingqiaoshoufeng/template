@@ -8,7 +8,7 @@
   >
     <template #menuHeaderRender>
       <RouterLink to="/">
-        <img src="@/assets/images/logo.png" />
+        <Logo />
         <h1 class="logo-title">{{ appTitle }}</h1>
       </RouterLink>
     </template>
@@ -78,10 +78,11 @@ import { getMenuData, clearMenuItem } from "@castle/pro-layout";
 import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import darknessModeSwitch from "#/components/darkness-mode-switch/index.vue";
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 import projectSettings from "@/config/project-settings.mjs";
 import MultiTab from "#/components/multi-tab/index.vue";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
+import Logo from "#/components/logo/index.vue";
 
 const bus = inject("bus");
 const appStore = useAppStore();

@@ -4,7 +4,7 @@
       <div class="ant-pro-global-header ant-pro-global-header-layout-mix">
         <div class="ant-pro-global-header-logo">
           <a>
-            <img src="@/assets/images/logo.png" />
+            <Logo />
             <h1 class="header-title">{{ appTitle }}</h1>
           </a>
         </div>
@@ -89,7 +89,7 @@
                     <a-form-item>
                       <img
                         v-if="verificationCodeImgSrc"
-                        style="height: 40px; max-width: 100%; float: right; cursor: pointer;"
+                        style="height: 40px; max-width: 100%; float: right; cursor: pointer"
                         :src="verificationCodeImgSrc"
                         @click="getVerificationCode"
                         alt="code"
@@ -147,8 +147,9 @@ import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 import { useAppStore, useUserStore } from "#/store";
 import { setToken } from "#/utils/auth";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
+import Logo from "#/components/logo/index.vue";
 
 const formState = reactive({
   username: "",
@@ -202,8 +203,7 @@ const startCountdown = () => {
 };
 
 const isDevMicroappMode = import.meta.env.VITE_APP_IS_DEV_MICROAPP_MODE === "true";
-const showErrInfo =
-  ["development"].includes(import.meta.env.MODE) || isDevMicroappMode;
+const showErrInfo = ["development"].includes(import.meta.env.MODE) || isDevMicroappMode;
 const isDevelopmentEnv = showErrInfo;
 
 const encrypt = inject("encrypt");

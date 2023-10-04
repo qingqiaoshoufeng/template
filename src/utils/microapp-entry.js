@@ -1,7 +1,7 @@
 import appRoutes from "~pages";
 // import { ssrUtils } from "vue";
 import "#/utils/request-interceptor";
-import userSettings from "@/config/settings.js";
+import userSettings from "#/utils/getUserSettings.js";
 
 window.CASTLE = window.CASTLE || {};
 
