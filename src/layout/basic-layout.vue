@@ -115,8 +115,10 @@ const menuData = computed(() => {
   const { name } = JSON.parse(microapp.value);
 
   if (microapp.value && import.meta.env.VITE_APP_MICROAPP_NAME !== name && handleMenuDataFlag.value) {
-    const filteredMicroappRoutes = window.CASTLE?.loadedMicroappRoutes.filter(({ path }) => {
-      return path.indexOf(`/${name}`) === 0;
+    const filteredMicroappRoutes = window.CASTLE?.loadedMicroappRoutes.filter(({ path, meta }) => {
+      const isCurrentMicroapp = path.indexOf(`/${name}`) === 0;
+      const isCustomPath = Boolean(meta?.target);
+      return isCurrentMicroapp || isCustomPath;
     });
     return getMenuData([{ path: "/", children: filteredMicroappRoutes }]).menuData;
   }
