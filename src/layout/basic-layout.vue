@@ -120,7 +120,7 @@ const menuData = computed(() => {
       const isCustomPath = Boolean(meta?.target);
       return isCurrentMicroapp || isCustomPath;
     });
-    return getMenuData([{ path: "/", children: filteredMicroappRoutes }]).menuData;
+    return getMenuData([{ path: "/", children: clearMenuItem(filteredMicroappRoutes) }]).menuData;
   }
   return menuData;
 });
@@ -135,6 +135,9 @@ const FilterAndSortMenuData = (menuData) => {
     })
     .sort((a, b) => {
       return typeof a?.meta?.sort === "number" && typeof b?.meta?.sort === "number" ? a?.meta?.sort - b?.meta?.sort : 0;
+    })
+    .map((i) => {
+      return userSettings?.handleMenuItem ? userSettings?.handleMenuItem(i) : i;
     });
 
   handledMenuData.forEach((element) => {
