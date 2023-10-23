@@ -259,10 +259,8 @@ const getVerificationCodeFn = userSettings?.userApiImplement?.getVerificationCod
 const getVerificationCode = async () => {
   codeLoading.value = true;
   if (getVerificationCodeFn) {
-    getVerificationCodeFn().then((src) => {
-      verificationCodeImgSrc.value = src;
-      codeLoading.value = false;
-    });
+    verificationCodeImgSrc.value = await getVerificationCodeFn();
+    codeLoading.value = false;
   }
 };
 

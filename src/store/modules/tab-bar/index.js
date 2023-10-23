@@ -13,6 +13,7 @@ const formatTag = (route) => {
 const useAppStore = defineStore("tabBar", {
   state: () => ({
     cacheTabList: new Set(),
+    excludeCacheTabList: new Set(),
     tagList: [
       // Set the first element dynamically as needed
       {
@@ -30,6 +31,9 @@ const useAppStore = defineStore("tabBar", {
     getCacheList() {
       return Array.from(this.cacheTabList);
     },
+    getExcludeCacheList() {
+      return Array.from(this.excludeCacheTabList);
+    },
   },
 
   actions: {
@@ -38,8 +42,10 @@ const useAppStore = defineStore("tabBar", {
       if (router.matched && Array.isArray(router.matched)) {
         const matched = router.matched.concat();
         matched.forEach((e) => {
-          if (e.path !== "/" && e.meta?.keepAlive) {
-            this.cacheTabList.add(e.meta?.keepAlive);
+          const key = e.meta?.keepAlive;
+          if (e.path !== "/" && key) {
+            this.cacheTabList.add(key);
+            this.excludeCacheTabList.delete(key);
           }
         });
       }
@@ -50,6 +56,7 @@ const useAppStore = defineStore("tabBar", {
     },
     removeKeepAliveCache(key) {
       this.cacheTabList.delete(key);
+      this.excludeCacheTabList.add(key);
     },
   },
 });
