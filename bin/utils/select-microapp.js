@@ -13,7 +13,10 @@ async function getMicroAppChoice(cb, hasMainapp = true) {
     return;
   }
 
-  const choices = microapp.apps.map((app) => ({ name: `子应用：${app.name}(${app.version})`, value: app }));
+  const choices = microapp.apps.map((app) => ({
+    name: `子应用：${app.displayName}/${app.name}(${app.version})`,
+    value: app,
+  }));
   if (hasMainapp) {
     choices.unshift({ name: "基座应用", value: { name: "main" } });
   }
