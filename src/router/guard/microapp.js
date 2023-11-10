@@ -3,6 +3,7 @@ import { loadScript } from "#/utils/load-script";
 import { bus } from "#/utils/event-bus";
 import { isLogin } from "#/utils/auth";
 import userSettings from "#/utils/getUserSettings.js";
+import isErrorPage from "#/utils/isErrorPage";
 
 export default function setupPermissionGuard(router) {
   router.beforeEach(async (to, from, next) => {
@@ -11,7 +12,7 @@ export default function setupPermissionGuard(router) {
     const apps = projectSettings?.microapp?.apps;
     if (isDevMicroappMode) {
       const microapp = apps.find((i) => i.name === microappName);
-      if (isLogin()) {
+      if (isLogin() && !isErrorPage(to.name)) {
         to.path.indexOf(microapp.name) === -1 || to.path === microapp.name ? next(microapp.homePath) : next();
       } else {
         next();

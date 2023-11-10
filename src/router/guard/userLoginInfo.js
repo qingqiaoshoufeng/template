@@ -1,10 +1,7 @@
 import { useUserStore } from "#/store";
 import { isLogin } from "#/utils/auth";
 import NProgress from "nprogress";
-
-const isErrorPage = (name) => {
-  return ["Result404", "Result403"].includes(name);
-};
+import isErrorPage from "#/utils/isErrorPage";
 
 export default function setupUserLoginInfoGuard(router) {
   router.beforeEach(async (to, from, next) => {
