@@ -4,6 +4,7 @@ import createRouteGuard from "./guard";
 import appRoutes from "~pages";
 import userSettings from "#/utils/getUserSettings.js";
 import NProgress from "nprogress"; // progress bar
+import flattenRoutes from "#/utils/flatten-routes.js";
 import "nprogress/nprogress.css";
 
 NProgress.configure({ showSpinner: false }); // NProgress Configuration
@@ -13,6 +14,8 @@ const microappHomePath = import.meta.env.VITE_APP_MICROAPP_HOME_PATH;
 const getHomePath = () => {
   return isDevMicroappMode ? microappHomePath : userSettings.homePath;
 };
+
+const appRoutersData = appRoutes.filter((i) => i?.name.indexOf("microapp-") === -1);
 
 const router = createRouter({
   history: userSettings?.router?.history
@@ -27,7 +30,7 @@ const router = createRouter({
         title: "首页",
         requiresAuth: false,
       },
-      children: appRoutes.filter((i) => i?.name.indexOf("microapp-") === -1),
+      children: flattenRoutes(appRoutersData),
     },
     {
       path: "/login",
@@ -54,5 +57,5 @@ export function resetRouter() {
   const newRouter = createRouter();
   router.matcher = newRouter.matcher;
 }
-
+export { appRoutersData };
 export default router;

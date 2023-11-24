@@ -83,6 +83,7 @@ import projectSettings from "@/config/project-settings.mjs";
 import MultiTab from "#/components/multi-tab/index.vue";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
 import Logo from "#/components/logo/index.vue";
+import { appRoutersData } from "#/router/index.js";
 
 const bus = inject("bus");
 const appStore = useAppStore();
@@ -110,7 +111,7 @@ const isEnabledMicroapp = () => {
 const router = useRouter();
 const handleMenuDataFlag = ref(1);
 const menuData = computed(() => {
-  const { menuData } = getMenuData(clearMenuItem(router.getRoutes()));
+  const { menuData } = getMenuData([{ path: "/", children: clearMenuItem(appRoutersData) }]);
   if (!microapp.value) return menuData;
   const { name } = JSON.parse(microapp.value);
 
@@ -181,13 +182,23 @@ bus.on("CASTLE__microappLoaded", () => {
 
 watchEffect(() => {
   if (router.currentRoute) {
-    const matched = router.currentRoute.value.matched.concat();
+    const selectedKeys = router.currentRoute.value.path
+      .split("/")
+      .filter((i) => i !== "")
+      .map((i, index, arr) => {
+        return "/" + arr.slice(0, index + 1).join("/");
+      });
 
-    state.selectedKeys = [
-      ...matched.filter((r) => r.name !== "index").map((r) => r.path),
-      router.currentRoute.value?.meta?.activeMenuPath,
-    ];
-    state.openKeys = matched.filter((r) => r.path !== router.currentRoute.value.path).map((r) => r.path);
+    state.selectedKeys = selectedKeys;
+
+    state.openKeys = selectedKeys.slice(0, selectedKeys.length - 1);
+
+    // const matched = router.currentRoute.value.matched.concat();
+    // state.selectedKeys = [
+    //   ...matched.filter((r) => r.name !== "index").map((r) => r.path),
+    //   router.currentRoute.value?.meta?.activeMenuPath,
+    // ];
+    // state.openKeys = matched.filter((r) => r.path !== router.currentRoute.value.path).map((r) => r.path);
 
     if (projectSettings.microapp?.apps) {
       microapp.value = JSON.stringify(

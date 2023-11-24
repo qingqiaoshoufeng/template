@@ -2,6 +2,7 @@ import appRoutes from "~pages";
 // import { ssrUtils } from "vue";
 import "#/utils/request-interceptor";
 import userSettings from "#/utils/getUserSettings.js";
+import flattenRoutes from "#/utils/flatten-routes.js";
 
 window.CASTLE = window.CASTLE || {};
 
@@ -22,9 +23,13 @@ if (typeof userSettings?.lifecycle?.microappMounted === "function") {
   userSettings?.lifecycle?.microappMounted(window.CASTLE, window?.CASTLE?.currentMicroapp);
 }
 
-// 注册路由
-appRoutes.forEach((r) => {
+// 注册扁平后的路由
+flattenRoutes(appRoutes).forEach((r) => {
   window.CASTLE?.config?.globalProperties?.$router.addRoute("index", r);
+});
+
+// 保存原始路由
+appRoutes.forEach((r) => {
   window.CASTLE?.loadedMicroappRoutes.push(r);
 });
 
