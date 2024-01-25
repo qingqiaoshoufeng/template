@@ -13,7 +13,36 @@
     <div class="login-wrap">
       <a-row :gutter="[16, 16]">
         <a-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" :xxl="6" :xxxl="4">
-          <div class="login-form-wrap">
+          <div
+            v-if="isLogin && userName && [undefined, false].includes(userSettings?.showLoginInfo)"
+            class="login-info"
+          >
+            <a-card class="">
+              <h1 class="header-title" style="text-align: center">当前已有登录用户</h1>
+              <br />
+              <a-avatar :size="56" style="background-color: #3a5a78">
+                <template #icon>
+                  <UserOutlined />
+                </template>
+              </a-avatar>
+              <h3 style="font-size: 18px">
+                <strong>{{ userName }}</strong>
+              </h3>
+              <RouterLink to="/">
+                <a-button
+                  size="large"
+                  block
+                  type="default"
+                  class="login-form-button"
+                  :loading="loading"
+                  style="margin-top: 24px"
+                >
+                  返回首页
+                </a-button>
+              </RouterLink>
+            </a-card>
+          </div>
+          <div v-else class="login-form-wrap">
             <h1 class="header-title"><span class="login-tip">登录到</span><br />{{ appTitle }}</h1>
             <br />
             <a-form :model="formState" name="normal_login" class="login-form" @finish="onFinish">
@@ -140,7 +169,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="LoginPage">
 import { computed, reactive, inject, ref, createVNode, onMounted } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { Modal } from "@castle/ant-design-vue";
@@ -150,6 +179,10 @@ import { setToken } from "#/utils/auth";
 import userSettings from "#/utils/getUserSettings.js";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
 import Logo from "#/components/logo/index.vue";
+import { RouterLink } from "vue-router";
+import { isLogin } from "#/utils/auth";
+const userStore = useUserStore();
+const userName = computed(() => userStore.name);
 
 const formState = reactive({
   username: "",
@@ -215,10 +248,8 @@ const appTitle = computed(() => appStore.title);
 const copyright = computed(() => appStore.copyright);
 
 let loading = ref(false);
-
 const onFinish = async (formData) => {
   loading.value = true;
-  const userStore = useUserStore();
   const { redirect, ...othersQuery } = router.currentRoute.value.query;
 
   const getPublicKey = userSettings?.userApiImplement?.rsaPublicKey;
@@ -301,6 +332,15 @@ const openPlatform = () => {
   // background-position: 100%;
 }
 
+.login-info {
+  ::v-deep(.ant-card-body) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(5px);
+  }
+}
 .login-form-wrap {
   padding: 10px 16px;
   background: none;
