@@ -1,5 +1,5 @@
 <script setup>
-import { ref, markRaw, computed } from "vue";
+import { ref, markRaw, computed, onBeforeUnmount } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
 import userSettings from "#/utils/getUserSettings.js";
 import zhCN from "@castle/ant-design-vue/es/locale/zh_CN";
@@ -36,6 +36,7 @@ bus.on("CASTLE__changeLayout", (e) => handleLayout(e));
 
 const isAppRoutes = computed(() => route.matched.map((i) => i.path).includes("/"));
 
+// 主题设置
 const defaultTheme = {
   brightness: 100,
   contrast: 100,
@@ -76,14 +77,61 @@ if (
   bus.emit("CASTLE__changeDarknessMode", false);
 }
 
+// 设置全局定时器事件
+const globalTimerNum = ref(0);
+const globalTimer = setInterval(() => {
+  globalTimerNum.value += 1;
+  bus.emit("CASTLE__globalTimer", globalTimerNum.value);
+}, 1000);
+
+onBeforeUnmount(() => {
+  clearInterval(globalTimer);
+});
+
+const globalTipText = ref({});
+// 全局定时监听
+bus.on("CASTLE__globalTimer", async (t) => {
+  if (!(t % 30)) {
+    // 监听是否发版，提示刷新浏览器
+    const deployInfo = await fetch("/deployInfo.json").then((res) => res.json());
+    if (deployInfo.time !== window?.CASTLE__deployTime) {
+      globalTipText.value = {
+        text: "检测到新版本，请刷新浏览器!",
+        type: "warning",
+      };
+    }
+
+    // 监听接口服务器状态，定向到维护页面
+    const serverStatus = typeof userSettings?.serverStatus === "function" && (await userSettings?.serverStatus());
+    if (serverStatus) router.push({ name: "maintenance" });
+
+    // 监听全局通知
+    const globalTip = typeof userSettings?.globalTip === "function" && (await userSettings?.globalTip());
+    if (globalTip) {
+      globalTipText.value = {
+        text: globalTip.text,
+        type: globalTip?.type || "warning",
+      };
+    }
+  }
+});
+
 // window.CASTLE__AppInstance = getCurrentInstance();
 </script>
 
 <template>
+  <a-alert
+    v-if="globalTipText.text"
+    :message="globalTipText.text"
+    type="warning"
+    show-icon
+    banner
+    class="CASTLE_global-alert"
+  />
   <a-config-provider v-bind="{ locale: zhCN, ...(userSettings?.themeConfigProvider || {}) }">
     <component v-if="isAppRoutes" :is="layout" />
     <RouterView v-else />
   </a-config-provider>
 </template>
 
-<style scoped></style>
+<style scoped lang="less"></style>

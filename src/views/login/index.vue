@@ -239,13 +239,16 @@ const onFinish = async (formData) => {
       encryptVerificationCodeAndPassWord: encrypt(`${formData.verificationCode}∞${formData.password}`, PUBLIC_KEY),
     })
     .then(() => {
-      router.push({
-        // @ts-ignore
-        name: redirect || "index",
-        query: {
-          ...othersQuery,
-        },
-      });
+      if (typeof userSettings?.homePath === "function") {
+        router.push(userSettings?.homePath());
+      } else {
+        router.push({
+          name: redirect || "index",
+          query: {
+            ...othersQuery,
+          },
+        });
+      }
     })
     .finally(() => {
       loading.value = false;

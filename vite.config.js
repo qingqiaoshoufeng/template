@@ -8,6 +8,8 @@ import Pages from "vite-plugin-pages";
 import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import { merge } from "lodash";
 import importToCDN from "vite-plugin-cdn-import";
+import generateFile from "vite-plugin-generate-file";
+import { setGenerateTimeInGlobalVariable } from "./src/utils/vite-plugins";
 // import Components from "unplugin-vue-components/vite";
 // import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
@@ -31,7 +33,7 @@ export default async ({ command, mode }) => {
   });
 
   const userConfig = vite && vite({ command, mode, env });
-
+  const deployTime = new Date().getTime();
   const defaultConfig = defineConfig({
     plugins: [
       vue(),
@@ -63,6 +65,16 @@ export default async ({ command, mode }) => {
           },
         ],
       }),
+      generateFile([
+        {
+          type: "json",
+          output: "./deployInfo.json",
+          data: {
+            time: deployTime,
+          },
+        },
+      ]),
+      setGenerateTimeInGlobalVariable(deployTime),
       // Components({
       //   resolvers: [AntDesignVueResolver({ importStyle: false })],
       // }),

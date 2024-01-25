@@ -17,3 +17,33 @@ export const FORBIDDEN_ROUTE = {
     permissions: [],
   },
 };
+
+export const MAINTENANCE_ROUTE = {
+  path: "/maintenance",
+  name: "maintenance",
+  component: () => import("#/views/exception/maintenance.vue"),
+  meta: {
+    requiresAuth: false,
+    permissions: [],
+  },
+};
+
+export const NETWORK_ERROR_ROUTE = {
+  path: "/network-error",
+  name: "networkError",
+  component: () => import("#/views/exception/network-error.vue"),
+  meta: {
+    requiresAuth: false,
+    permissions: [],
+  },
+};
+
+export const BROWSER_INCOMPATIBLE_ROUTE = {
+  path: "/browser-incompatible",
+  name: "browserIncompatible",
+  component: () => import("#/views/exception/browser-incompatible.vue"),
+  meta: {
+    requiresAuth: false,
+    permissions: [],
+  },
+};

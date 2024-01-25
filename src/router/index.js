@@ -1,5 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { NOT_FOUND_ROUTE, FORBIDDEN_ROUTE } from "./routers/modules/base";
+import {
+  NOT_FOUND_ROUTE,
+  FORBIDDEN_ROUTE,
+  MAINTENANCE_ROUTE,
+  NETWORK_ERROR_ROUTE,
+  BROWSER_INCOMPATIBLE_ROUTE,
+} from "./routers/modules/base";
 import createRouteGuard from "./guard";
 import appRoutes from "~pages";
 import userSettings from "#/utils/getUserSettings.js";
@@ -43,6 +49,9 @@ const router = createRouter({
     },
     NOT_FOUND_ROUTE,
     FORBIDDEN_ROUTE,
+    MAINTENANCE_ROUTE,
+    NETWORK_ERROR_ROUTE,
+    BROWSER_INCOMPATIBLE_ROUTE,
   ],
   scrollBehavior() {
     return { top: 0 };
