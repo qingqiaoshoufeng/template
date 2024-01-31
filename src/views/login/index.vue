@@ -165,7 +165,7 @@
       </a-row>
     </div>
 
-    <footer class="copyright">{{ typeof copyright === "function" && copyright() }}</footer>
+    <footer class="copyright">{{ copyright }}</footer>
   </div>
 </template>
 
@@ -244,8 +244,10 @@ const encrypt = inject("encrypt");
 const router = useRouter();
 
 const appStore = useAppStore();
-const appTitle = computed(() => appStore.title);
-const copyright = computed(() => appStore.copyright);
+const appTitle = computed(() => (typeof appStore.title === "function" ? appStore.title() : appStore.title));
+const copyright = computed(() =>
+  typeof appStore.copyright === "function" ? appStore.copyright() : appStore.copyright,
+);
 
 let loading = ref(false);
 const onFinish = async (formData) => {

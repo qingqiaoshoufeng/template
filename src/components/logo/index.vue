@@ -9,7 +9,7 @@ import userSettings from "#/utils/getUserSettings.js";
 import { useAppStore } from "#/store";
 
 const appStore = useAppStore();
-const appTitle = computed(() => appStore.title);
+const appTitle = computed(() => (typeof appStore.title === "function" ? appStore.title() : appStore.title));
 const logo = userSettings?.logo;
 </script>
 
