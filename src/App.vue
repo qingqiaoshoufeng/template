@@ -93,7 +93,7 @@ const globalTipText = ref({});
 bus.on("CASTLE__globalTimer", async (t) => {
   if (!(t % 30)) {
     // 监听是否发版，提示刷新浏览器
-    const deployInfo = await fetch("/deployInfo.json").then((res) => res.json());
+    const deployInfo = await fetch(`/deployInfo.json?t=${new Date().getTime()}`).then((res) => res.json());
     if (deployInfo.time !== window?.CASTLE__deployTime) {
       globalTipText.value = {
         text: "检测到新版本，请刷新浏览器!",
