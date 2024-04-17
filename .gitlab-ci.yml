@@ -1,4 +1,4 @@
 include:
   - project: 'Castle/gitlab-ci'
     ref: master
-    file: '.castle-gitlab-ci-test.yml'
+    file: '.castle-gitlab-ci.yml'
