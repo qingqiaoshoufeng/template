@@ -93,11 +93,15 @@ const globalTipText = ref({});
 bus.on("CASTLE__globalTimer", async (t) => {
   if (!(t % 30)) {
     // 监听是否发版，提示刷新浏览器
-    const deployInfo = await fetch(`/deployInfo.json?t=${new Date().getTime()}`).then((res) => res.json());
+    const base = import.meta.env.BASE_URL;
+    const deployInfo = await fetch(`${base !== "/" ? base : ""}/deployInfo.json?t=${new Date().getTime()}`).then(
+      (res) => res.json(),
+    );
     if (deployInfo.time !== window?.CASTLE__deployTime) {
       globalTipText.value = {
         text: "检测到新版本，请刷新浏览器!",
         type: "warning",
+        needReload: true,
       };
     }
 
@@ -116,22 +120,32 @@ bus.on("CASTLE__globalTimer", async (t) => {
   }
 });
 
-// window.CASTLE__AppInstance = getCurrentInstance();
+const reloadWindow = () => {
+  window.location.reload();
+};
 </script>
 
 <template>
-  <a-alert
-    v-if="globalTipText.text"
-    :message="globalTipText.text"
-    type="warning"
-    show-icon
-    banner
-    class="CASTLE_global-alert"
-  />
+  <a-alert v-if="globalTipText.text" type="warning" show-icon class="CASTLE_global-alert">
+    <template #message>
+      <div class="CASTLE_global-alert-content">
+        <span>
+          {{ globalTipText.text }}
+        </span>
+        <a-button v-if="globalTipText.needReload" type="default" size="small" @click="reloadWindow">刷新页面</a-button>
+      </div>
+    </template>
+  </a-alert>
+
   <a-config-provider v-bind="{ locale: zhCN, ...(userSettings?.themeConfigProvider || {}) }">
     <component v-if="isAppRoutes" :is="layout" />
     <RouterView v-else />
   </a-config-provider>
 </template>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.CASTLE_global-alert-content {
+  display: flex;
+  justify-content: space-between;
+}
+</style>

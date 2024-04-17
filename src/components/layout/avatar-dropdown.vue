@@ -1,9 +1,10 @@
 <template>
   <a-dropdown placement="bottomRight">
     <span class="account-avatar">
-      <a-avatar :size="28" style="background-color: #3a5a78">
+      <a-avatar :size="28" style="background-color: rgba(255, 255, 255, 0.2)">
         <template #icon>
-          <UserOutlined />
+          <RenderJsxComponents v-if="userNavigationAvatar" :componentVnode="userNavigationAvatar" />
+          <UserOutlined v-else />
         </template>
       </a-avatar>
       <span class="account-name">{{ currentUser.name || "未登录" }}</span>
@@ -31,9 +32,13 @@
 import { Modal } from "@castle/ant-design-vue";
 import { mapActions } from "pinia";
 import { useUserStore, usePermissionStore } from "#/store";
+import RenderJsxComponents from "#/components/render-jsx-components/index";
 import userSettings from "#/utils/getUserSettings.js";
 export default {
   name: "AvatarDropdown",
+  components: {
+    RenderJsxComponents,
+  },
   props: {
     currentUser: {
       type: Object,
@@ -47,6 +52,9 @@ export default {
   computed: {
     userNavigation() {
       return userSettings?.userNavigation;
+    },
+    userNavigationAvatar() {
+      return userSettings?.userNavigationAvatar;
     },
   },
   methods: {

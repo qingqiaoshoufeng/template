@@ -175,12 +175,11 @@ import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 import { useAppStore, useUserStore } from "#/store";
-import { setToken } from "#/utils/auth";
+import { setToken, isLogin } from "#/utils/auth";
 import userSettings from "#/utils/getUserSettings.js";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
 import Logo from "#/components/logo/index.vue";
 import { RouterLink } from "vue-router";
-import { isLogin } from "#/utils/auth";
 const userStore = useUserStore();
 const userName = computed(() => userStore.name);
 
