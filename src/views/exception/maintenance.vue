@@ -2,7 +2,7 @@
   <a-result title="系统维护中" sub-title="系统维护中，请稍后再试">
     <template #icon>
       <div style="color: #0052d9" class="result-bg-img">
-        <img src="../../assets/images/assets-result-maintenance.svg" />
+        <img src="../../assets/images/assets-result-maintenance.svg" alt="系统维护中" />
       </div>
     </template>
     <template #extra>

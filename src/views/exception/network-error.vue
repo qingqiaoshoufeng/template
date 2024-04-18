@@ -2,7 +2,7 @@
   <a-result title="网络异常" sub-title="网络异常，请稍后再试">
     <template #icon>
       <div style="color: #0052d9" class="result-bg-img">
-        <img src="../../assets/images/assets-result-wifi.svg" />
+        <img src="../../assets/images/assets-result-wifi.svg" alt="网络异常" />
       </div>
     </template>
     <template #extra>

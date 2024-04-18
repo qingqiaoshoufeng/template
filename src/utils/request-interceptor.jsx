@@ -99,7 +99,7 @@ if (responseSetting) {
           }
         } else {
           notification.error({
-            message: `${status} ${statusText}` || "请求失败",
+            message: (status && statusText) ?`${status} ${statusText}` : "请求失败",
             description: <RequestErrorInfo description={message || getCodeMessages(status) || `未知错误 ${statusText}`} response={error.response} />
           });
         }
