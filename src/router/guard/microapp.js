@@ -51,9 +51,9 @@ export default function setupPermissionGuard(router) {
           }
           bus.emit("CASTLE__microappLoadedLoading", true);
           const manifest = await (
-            await fetch(`${deployBasePath}/microapp-${name}/${finallyVersion}/manifest.json`)
+            await fetch(`${deployBasePath || ""}/microapp-${name}/${finallyVersion}/manifest.json`)
           ).json();
-          const loadPath = `${deployBasePath}/microapp-${name}/${finallyVersion}/${manifest?.["node_modules/@castle/castle-template/src/utils/microapp-entry.js"]?.file}`;
+          const loadPath = `${deployBasePath || ""}/microapp-${name}/${finallyVersion}/${manifest?.["node_modules/@castle/castle-template/src/utils/microapp-entry.js"]?.file}`;
           await loadScript(loadPath, { type: "module" });
           loadedMicroapp.push({ name, path: loadPath });
 
