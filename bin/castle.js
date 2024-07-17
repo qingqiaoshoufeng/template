@@ -12,32 +12,36 @@ const configPath = path.resolve(__dirname, "../vite.config.js");
 
 // program.version(require("../package.json").version).usage("<command> [options] ");
 
-const handleAction = (command, str, { args = [] }, env = {}) => {
-  // console.log(args);
-  // console.log(str);
+const handleAction = (command, str, { args = [] }, env = {}, detached) => {
+  return new Promise((resolve) => {
+    // console.log(args);
+    // console.log(str);
 
-  // 给husky执行文件添加可执行权限
-  const huskyPreCommitPath = path.resolve(process.cwd(), "./.husky/pre-commit");
-  const huskyCommitMsgPath = path.resolve(process.cwd(), "./.husky/commit-msg");
-  fs.chmod(huskyPreCommitPath, 0o755, (err) => {
-    if (err) throw err;
-  });
-  fs.chmod(huskyCommitMsgPath, 0o755, (err) => {
-    if (err) throw err;
-  });
+    // 给husky执行文件添加可执行权限
+    const huskyPreCommitPath = path.resolve(process.cwd(), "./.husky/pre-commit");
+    const huskyCommitMsgPath = path.resolve(process.cwd(), "./.husky/commit-msg");
+    fs.chmod(huskyPreCommitPath, 0o755, (err) => {
+      if (err) throw err;
+    });
+    fs.chmod(huskyCommitMsgPath, 0o755, (err) => {
+      if (err) throw err;
+    });
 
-  const strArray = [];
-  const keys = Object.keys(str);
-  keys.forEach((key) => {
-    if (str[key]) {
-      strArray.push(`${key.length > 1 ? "--" : "-"}${key}`);
-      if (typeof str[key] !== "boolean") strArray.push(str[key]);
-    }
-  });
+    const strArray = [];
+    const keys = Object.keys(str);
+    keys.forEach((key) => {
+      if (str[key]) {
+        strArray.push(`${key.length > 1 ? "--" : "-"}${key}`);
+        if (typeof str[key] !== "boolean") strArray.push(str[key]);
+      }
+    });
 
-  // console.log(["serve", "--config", configPath, ...args, ...strArray]);
-  require("./utils/invoke-vite")([command, "--config", configPath, ...args, ...strArray], env);
-  // require("./utils/invoke-vite")(["serve", "--config", configPath, "--debug"]);
+    // console.log(["serve", "--config", configPath, ...args, ...strArray]);
+    require("./utils/invoke-vite")([command, "--config", configPath, ...args, ...strArray], env, detached).then(() =>
+      resolve(),
+    );
+    // require("./utils/invoke-vite")(["serve", "--config", configPath, "--debug"]);
+  });
 };
 
 program
@@ -90,7 +94,7 @@ program
   .option("-m, --mode <mode>", `[string] set env mode`)
   // eslint-disable-next-line no-unused-vars
   .action((...args) => {
-    require("./utils/select-microapp")(({ app: { name, version, homePath } }) => {
+    require("./utils/select-microapp").getMicroAppChoice(({ app: { name, version, homePath } }) => {
       handleAction(
         ...[
           "serve",
@@ -113,24 +117,31 @@ program
   .command("build:microapp")
   .description("构建微前端应用生产版本")
   .option("--microappName <name>", `[string] set microapp name`)
+  .option("-a, --all", `[boolean] build all microapps`)
   .option("-m, --mode <mode>", `[string] set env mode`)
   .option("--base <path>", `[string] public base path (default: /)`)
   .action(async (...args) => {
     const argsObj = Object(...[...args]);
-    const handleActionFn = (name, version) => {
-      handleAction(
-        ...[
-          "build",
-          {
-            outDir: `dist/microapp-${name}/${version}`,
-            mode: argsObj?.m ?? argsObj?.mode,
-          },
-          {},
-          { appName: name, appVersion: version, isMicroappMode: true, isMainappMode: false },
-        ],
-      );
+    const getAllMicroapp = require("./utils/select-microapp").getAllMicroapp;
+    const microapp = await getAllMicroapp();
+    const handleActionFn = (name, version, detached) => {
+      return new Promise((resolve) => {
+        handleAction(
+          ...[
+            "build",
+            {
+              outDir: `dist/microapp-${name}/${version}`,
+              mode: argsObj?.m ?? argsObj?.mode,
+            },
+            {},
+            { appName: name, appVersion: version, isMicroappMode: true, isMainappMode: false },
+            detached,
+          ],
+        ).then(() => resolve());
+      });
     };
 
+    // 根据 microappName 参数构建指定微应用
     if (argsObj?.microappName) {
       if (argsObj?.microappName === "main") {
         handleAction(
@@ -153,8 +164,32 @@ program
         const app = microapp.apps.find((app) => app.name === argsObj?.microappName);
         handleActionFn(app?.name, app?.version);
       }
+
+      // 构建所有微应用
+    } else if (argsObj?.all) {
+      try {
+        console.info("[CASTLE CLI] ⏳ 开始构建 主应用");
+        await handleAction(
+          ...[
+            "build",
+            { mode: argsObj?.m ?? argsObj?.mode, base: argsObj?.base },
+            { detached: true },
+            { appName: "main", appVersion: "latest", isMicroappMode: false, isMainappMode: true },
+            true,
+          ],
+        );
+
+        for (const app of microapp.apps) {
+          console.info(`[CASTLE CLI] ⌛️ 开始构建 子应用：${app?.name}(${app?.version})`);
+          await handleActionFn(app?.name, app?.version, true);
+        }
+
+        console.log("[CASTLE CLI] ✅ 所有应用构建已完成。");
+      } catch (error) {
+        console.error(error);
+      }
     } else {
-      require("./utils/select-microapp")(({ app: { name, version, homePath } }) => {
+      require("./utils/select-microapp").getMicroAppChoice(({ app: { name, version, homePath } }) => {
         // const argsObj = Object(...[...args]);
         // const mode = argsObj?.app ? { m: `microapp:${argsObj?.app}` } : {};
         if (name === "main") {

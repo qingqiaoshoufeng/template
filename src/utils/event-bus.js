@@ -6,7 +6,8 @@ const bus = {
   on: emitter.on,
   off: emitter.off,
   emit: emitter.emit,
-  clear: emitter.all.clear(),
+  all: emitter.all,
+  clear: emitter.all.clear,
 };
 
 export { bus };

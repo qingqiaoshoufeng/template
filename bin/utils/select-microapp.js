@@ -2,14 +2,20 @@ const { pathToFileURL } = require("url");
 const path = require("path");
 const inquirer = require("inquirer");
 
-async function getMicroAppChoice(cb, hasMainapp = true) {
+async function getAllMicroapp() {
   const settings = await import(pathToFileURL(`${path.resolve(process.cwd(), "./src/config/project-settings.mjs")}`));
   const {
     default: { microapp },
   } = settings;
 
+  return Promise.resolve(microapp);
+}
+
+async function getMicroAppChoice(cb, hasMainapp = true) {
+  const microapp = await getAllMicroapp();
+
   if (!microapp?.apps) {
-    console.warn("[CASTLE CLI] 未发现微前端的配置：project-settings.mjs -> microapp -> apps");
+    console.warn("[CASTLE CLI] 💡 未发现微前端的配置：project-settings.mjs -> microapp -> apps");
     return;
   }
 
@@ -35,4 +41,4 @@ async function getMicroAppChoice(cb, hasMainapp = true) {
   });
 }
 
-module.exports = getMicroAppChoice;
+module.exports = { getMicroAppChoice, getAllMicroapp };
