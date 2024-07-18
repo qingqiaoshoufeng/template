@@ -35,6 +35,9 @@ export default async ({ command, mode }) => {
   const userConfig = vite && vite({ command, mode, env });
   const deployTime = new Date().getTime();
   const defaultConfig = defineConfig({
+    define: {
+      "process.env": process.env,
+    },
     plugins: [
       vue(),
       vueJsx(),
