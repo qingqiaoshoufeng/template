@@ -2,7 +2,7 @@ const { spawn } = require("child_process");
 const syncFiles = require("./sync-files.js");
 
 function invokeVite(args, env, detached = false) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     try {
       syncFiles();
       const vitePath = require.resolve(".bin/vite");
@@ -21,8 +21,19 @@ function invokeVite(args, env, detached = false) {
         });
       });
 
+      // 监听子进程的正常退出
       ["beforeExit"].forEach((signal) => {
         process.on(signal, () => resolve());
+      });
+
+      // 监听子进程的异常退出
+      ["exit"].forEach((signal) => {
+        childProcess.on(signal, (code) => {
+          if (code !== 0) {
+            reject();
+            process.exit(code);
+          }
+        });
       });
     } catch (error) {
       console.log(error);

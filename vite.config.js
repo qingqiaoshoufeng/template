@@ -9,7 +9,7 @@ import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import { merge } from "lodash";
 import importToCDN from "vite-plugin-cdn-import";
 import generateFile from "vite-plugin-generate-file";
-import { setGenerateTimeInGlobalVariable } from "./src/utils/vite-plugins";
+import { setGenerateTimeInGlobalVariable, castleLowcodeBuildSaveSchema } from "./src/utils/vite-plugins";
 // import Components from "unplugin-vue-components/vite";
 // import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
@@ -78,6 +78,7 @@ export default async ({ command, mode }) => {
         },
       ]),
       setGenerateTimeInGlobalVariable(deployTime),
+      castleLowcodeBuildSaveSchema(mode),
       // Components({
       //   resolvers: [AntDesignVueResolver({ importStyle: false })],
       // }),

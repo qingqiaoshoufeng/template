@@ -13,7 +13,7 @@ const configPath = path.resolve(__dirname, "../vite.config.js");
 // program.version(require("../package.json").version).usage("<command> [options] ");
 
 const handleAction = (command, str, { args = [] }, env = {}, detached) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     // console.log(args);
     // console.log(str);
 
@@ -37,9 +37,9 @@ const handleAction = (command, str, { args = [] }, env = {}, detached) => {
     });
 
     // console.log(["serve", "--config", configPath, ...args, ...strArray]);
-    require("./utils/invoke-vite")([command, "--config", configPath, ...args, ...strArray], env, detached).then(() =>
-      resolve(),
-    );
+    require("./utils/invoke-vite")([command, "--config", configPath, ...args, ...strArray], env, detached)
+      .then(() => resolve())
+      .catch(() => reject());
     // require("./utils/invoke-vite")(["serve", "--config", configPath, "--debug"]);
   });
 };
@@ -125,20 +125,18 @@ program
     const getAllMicroapp = require("./utils/select-microapp").getAllMicroapp;
     const microapp = await getAllMicroapp();
     const handleActionFn = (name, version, detached) => {
-      return new Promise((resolve) => {
-        handleAction(
-          ...[
-            "build",
-            {
-              outDir: `dist/microapp-${name}/${version}`,
-              mode: argsObj?.m ?? argsObj?.mode,
-            },
-            {},
-            { appName: name, appVersion: version, isMicroappMode: true, isMainappMode: false },
-            detached,
-          ],
-        ).then(() => resolve());
-      });
+      return handleAction(
+        ...[
+          "build",
+          {
+            outDir: `dist/microapp-${name}/${version}`,
+            mode: argsObj?.m ?? argsObj?.mode,
+          },
+          {},
+          { appName: name, appVersion: version, isMicroappMode: true, isMainappMode: false },
+          detached,
+        ],
+      );
     };
 
     // 根据 microappName 参数构建指定微应用
@@ -168,23 +166,29 @@ program
       // 构建所有微应用
     } else if (argsObj?.all) {
       try {
-        console.info("[CASTLE CLI] ⏳ 开始构建 主应用");
+        console.info("[🏰 CASTLE CLI] ⏳ 开始构建 主应用");
         await handleAction(
           ...[
             "build",
             { mode: argsObj?.m ?? argsObj?.mode, base: argsObj?.base },
-            { detached: true },
+            {},
             { appName: "main", appVersion: "latest", isMicroappMode: false, isMainappMode: true },
-            true,
+            false,
           ],
-        );
+        ).catch(() => {
+          process.exit(1);
+          return;
+        });
 
         for (const app of microapp.apps) {
-          console.info(`[CASTLE CLI] ⌛️ 开始构建 子应用：${app?.name}(${app?.version})`);
-          await handleActionFn(app?.name, app?.version, true);
+          console.info(`[🏰 CASTLE CLI] ⌛️ 开始构建 子应用：${app?.name}(${app?.version})`);
+          await handleActionFn(app?.name, app?.version, false).catch(() => {
+            process.exit(1);
+            return;
+          });
         }
 
-        console.log("[CASTLE CLI] ✅ 所有应用构建已完成。");
+        console.log("[🏰 CASTLE CLI] 🎉🎉🎉 所有应用构建已完成。");
       } catch (error) {
         console.error(error);
       }

@@ -15,7 +15,7 @@ async function getMicroAppChoice(cb, hasMainapp = true) {
   const microapp = await getAllMicroapp();
 
   if (!microapp?.apps) {
-    console.warn("[CASTLE CLI] 💡 未发现微前端的配置：project-settings.mjs -> microapp -> apps");
+    console.warn("[🏰 CASTLE CLI] 💡 未发现微前端的配置：project-settings.mjs -> microapp -> apps");
     return;
   }
 
