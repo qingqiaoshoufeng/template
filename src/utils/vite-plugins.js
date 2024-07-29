@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "node:path";
 import glob from "fast-glob";
 import { loadEnv } from "vite";
 export const setGenerateTimeInGlobalVariable = (deployTime) => ({
@@ -17,7 +18,21 @@ export const castleLowcodeBuildSaveSchema = (mode) => ({
     const env = loadEnv(mode, process.cwd(), "");
     const { isMainappMode: isMainapp } = env;
     const isMainappMode = isMainapp === "true";
-    if (mode === "development" || !isMainappMode) {
+    let isExistLowcodeRenderComponent = false;
+    fs.readFile(path.resolve(process.cwd(), "./package.json"), "utf8", (err, data) => {
+      if (err) {
+        console.error("Error reading package.json:", err);
+        return;
+      }
+
+      try {
+        const pkg = JSON.parse(data);
+        isExistLowcodeRenderComponent = pkg.dependencies["@castle/lowcode-vue-schema-component"] !== undefined;
+      } catch (parseErr) {
+        console.error("Error parsing package.json:", parseErr);
+      }
+    });
+    if (mode === "development" || !isMainappMode || !isExistLowcodeRenderComponent) {
       return;
     }
 

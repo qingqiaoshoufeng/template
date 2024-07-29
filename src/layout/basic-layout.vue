@@ -78,7 +78,7 @@ import { getMenuData, clearMenuItem } from "@castle/pro-layout";
 import avatarDropdown from "#/components/layout/avatar-dropdown.vue";
 import darknessModeSwitch from "#/components/darkness-mode-switch/index.vue";
 import { useAppStore, useUserStore, usePermissionStore } from "#/store";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 import projectSettings from "@/config/project-settings.mjs";
 import MultiTab from "#/components/multi-tab/index.vue";
 import RenderJsxComponents from "#/components/render-jsx-components/index";

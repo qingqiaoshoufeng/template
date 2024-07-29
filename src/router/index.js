@@ -8,7 +8,7 @@ import {
 } from "./routers/modules/base";
 import createRouteGuard from "./guard";
 import appRoutes from "~pages";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 import NProgress from "nprogress"; // progress bar
 import flattenRoutes from "#/utils/flatten-routes.js";
 import "nprogress/nprogress.css";

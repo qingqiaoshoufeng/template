@@ -1,7 +1,7 @@
 <script setup>
 import { ref, markRaw, computed, onBeforeUnmount } from "vue";
 import { RouterView, useRoute, useRouter } from "vue-router";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 import zhCN from "@castle/ant-design-vue/es/locale/zh_CN";
 import { bus } from "#/utils/event-bus";
 import {

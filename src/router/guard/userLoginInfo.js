@@ -1,7 +1,7 @@
 import { useUserStore } from "#/store";
 import { isLogin } from "#/utils/auth";
 import NProgress from "nprogress";
-import isErrorPage from "#/utils/isErrorPage";
+import isErrorPage from "#/utils/is-error-page";
 
 export default function setupUserLoginInfoGuard(router) {
   router.beforeEach(async (to, from, next) => {

@@ -176,7 +176,7 @@ import { Modal } from "@castle/ant-design-vue";
 import { useRouter } from "vue-router";
 import { useAppStore, useUserStore } from "#/store";
 import { setToken, isLogin } from "#/utils/auth";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
 import Logo from "#/components/logo/index.vue";
 import { RouterLink } from "vue-router";

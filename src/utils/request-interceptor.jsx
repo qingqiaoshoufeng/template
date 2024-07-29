@@ -3,7 +3,7 @@ import axios from "axios";
 import { notification } from "@castle/ant-design-vue";
 import { useUserStore } from "#/store";
 import { getToken } from "#/utils/auth";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 import { getCodeMessages } from "#/utils/http-code-messages";
 import RequestErrorInfo from "#/components/request-error-info/index.vue";
 

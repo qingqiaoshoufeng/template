@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 
 import { setToken, clearToken } from "#/utils/auth";
 
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 
 const useUserStore = defineStore("user", {
   state: () => ({

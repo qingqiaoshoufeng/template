@@ -1,4 +1,4 @@
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 
 const TOKEN_KEY = userSettings.tokenKeyName || "token";
 

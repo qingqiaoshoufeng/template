@@ -1,6 +1,6 @@
 import * as castleStores from "../store";
 import * as request from "./request";
-import * as rsaEncrypt from "./rsaEncrypt";
+import * as rsaEncrypt from "./rsa-encrypt";
 import * as eventBus from "./event-bus";
 
 import { usePermissionStore } from "#/store";

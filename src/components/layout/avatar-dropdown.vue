@@ -33,7 +33,7 @@ import { Modal } from "@castle/ant-design-vue";
 import { mapActions } from "pinia";
 import { useUserStore, usePermissionStore } from "#/store";
 import RenderJsxComponents from "#/components/render-jsx-components/index";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 export default {
   name: "AvatarDropdown",
   components: {

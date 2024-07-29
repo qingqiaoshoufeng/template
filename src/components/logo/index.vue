@@ -5,7 +5,7 @@
 
 <script setup>
 import { computed } from "vue";
-import userSettings from "#/utils/getUserSettings.js";
+import userSettings from "#/utils/get-user-settings.js";
 import { useAppStore } from "#/store";
 
 const appStore = useAppStore();
