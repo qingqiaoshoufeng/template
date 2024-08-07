@@ -40,6 +40,10 @@ if (typeof userSettings?.lifecycle?.mounted === "function") {
   userSettings?.lifecycle?.mounted(app);
 }
 
+if (typeof userSettings?.lifecycle?.mainappMounted === "function") {
+  userSettings?.lifecycle?.mainappMounted(app);
+}
+
 // 微前端全局变量
 window.CASTLE = app;
 window.CASTLE.loadedMicroapp = [];

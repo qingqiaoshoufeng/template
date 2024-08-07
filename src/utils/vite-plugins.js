@@ -18,20 +18,10 @@ export const castleLowcodeBuildSaveSchema = (mode) => ({
     const env = loadEnv(mode, process.cwd(), "");
     const { isMainappMode: isMainapp } = env;
     const isMainappMode = isMainapp === "true";
-    let isExistLowcodeRenderComponent = false;
-    fs.readFile(path.resolve(process.cwd(), "./package.json"), "utf8", (err, data) => {
-      if (err) {
-        console.error("Error reading package.json:", err);
-        return;
-      }
+    const pkg = fs.readFileSync(path.resolve(process.cwd(), "./package.json"), "utf8");
+    const isExistLowcodeRenderComponent =
+      pkg && JSON.parse(pkg).dependencies["@castle/lowcode-vue-schema-component"] !== undefined;
 
-      try {
-        const pkg = JSON.parse(data);
-        isExistLowcodeRenderComponent = pkg.dependencies["@castle/lowcode-vue-schema-component"] !== undefined;
-      } catch (parseErr) {
-        console.error("Error parsing package.json:", parseErr);
-      }
-    });
     if (mode === "development" || !isMainappMode || !isExistLowcodeRenderComponent) {
       return;
     }
